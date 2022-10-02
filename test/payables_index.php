@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>SALES</title>
+        <title>PAYABLES</title>
         <link rel="stylesheet" href="../admin/assets/style.css">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
         <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
@@ -142,7 +142,7 @@
   <div class="flex-container">
      <div class="flex-items">
        <div class="table-title">
-        <h3>SALES</h3>
+        <h3>PAYABLES</h3>
         <div style="display: inline">
             <button type="button" class="btn btn-dark" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-print"></i> Print</button>
         <div style="float: right;">
@@ -179,7 +179,7 @@
     function load_data(page, query = '')
     {
       $.ajax({
-        url:"../actions/fetchsales.php",
+        url:"../actions/fetchpayables.php",
         method:"POST",
         data:{page:page, query:query},
         success:function(data)

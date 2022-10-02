@@ -27,31 +27,24 @@ else
 }
 
 $query = "
-SELECT tbldeliveryorder.id AS doid, 
-tblsupplier.name as suppliername,
-tblbranch.name as branchname,
+SELECT tblpayables.id AS pyid, 
 tblusers.lastname as username,
-tbldeliveryorder.total as total,
-tbldeliveryorder.date as ddate,
-tbldeliveryorder.time as  ttime
-FROM tbldeliveryorder 
-INNER JOIN tblsupplier 
-ON tbldeliveryorder.supplierid=tblsupplier.id
-INNER JOIN tblbranch
-ON tbldeliveryorder.branchid=tblbranch.id
+tblpayables.date as calendar,
+tblpayables.total as total
+FROM tblpayables 
 INNER JOIN tblusers
-ON tbldeliveryorder.userid=tblusers.id
-WHERE tbldeliveryorder.active = 1
+ON tblpayables.userid=tblusers.id
+WHERE tblpayables.active = 1
 ";
 
 if($_POST['query'] != '')
 {
   $query .= '
-  AND tbldeliveryorder.id LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
+  AND tblpayables.id LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
   ';
 }
 
-$query .= 'ORDER BY tbldeliveryorder.id ASC ';
+$query .= 'ORDER BY tblpayables.id ASC ';
 
 $filter_query = $query . 'LIMIT '.$start.', '.$limit.'';
 
@@ -68,9 +61,7 @@ $output = '
 <label>Total Records - '.$total_data.'</label>
 <table class="table table-striped table-bordered" style="background: #CDCDCD; border-collapse: collapse;">
   <tr>
-        <th class="text-center" style="border: 1px solid;">Delivery Order ID</th>
-        <th class="text-center" style="border: 1px solid;">Supplier Name</th>
-        <th class="text-center" style="border: 1px solid;">Branch</th>
+        <th class="text-center" style="border: 1px solid;">Purchase Order ID</th>
         <th class="text-center" style="border: 1px solid;">Creator</th>
         <th class="text-center" style="border: 1px solid;">Date</th>
         <th class="text-left" style="border: 1px solid;">Total (₱)</th>
@@ -82,11 +73,9 @@ if($total_data > 0)
   {
     $output .= '
     <tr>
-      <td style="border: 1px solid;">'.$row["doid"].'</td>
-      <td style="border: 1px solid;">'.$row["suppliername"].'</td>
-      <td style="border: 1px solid;">'.$row["branchname"].'</td>
+      <td style="border: 1px solid;">'.$row["pyid"].'</td>
       <td style="border: 1px solid;">'.$row["username"].'</td>
-      <td style="border: 1px solid;">'.$row["ddate"].'</td>
+      <td style="border: 1px solid;">'.$row["calendar"].'</td>
       <td style="border: 1px solid;">'.$row["total"].'</td>
     </tr>
     ';
