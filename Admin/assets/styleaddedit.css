@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700&display=swap');
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
+
+::-webkit-scrollbar{
+  display:none ;
+}
+
 *{
   margin: 0;
   padding: 0;
@@ -55,7 +60,7 @@ img{
 }
 
 .side-bar{
-  background: #262d32;
+  background: #38739a;
   width: 310px;
   height: 100%;
   position: fixed;
@@ -90,7 +95,7 @@ img{
 }
 
 .side-bar .menu .item a:hover{
-  background: #7c8085;
+  background: #2d6184;
   transition: 500 0.3s ease;
   font-weight: 900;
 }
