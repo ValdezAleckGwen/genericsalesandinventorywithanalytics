@@ -75,21 +75,41 @@ if(isset($_POST["item_id"]))
 	{
 
 	$deliveryorderquery = "
-	UPDATE tblpurchaseorderitem SET quantity = :quantity WHERE id = :purchaseorderitemid
+	SELECT * FROM tblpurchaseorderitem WHERE purchaseorderitemid = :purchaseorderitemid;
 	";
 
-	$statement  = $connect->prepare($deliveryorderquery);
+
+
+
+	$itemtotal = 0;
 	$purchaseorderitemid = $_POST['item_id'][$count];
 	$poquantity = $_POST['po_quantity'][$count];
 	$itemquantity = $_POST['item_quantity'][$count];
 	$quantity =  $poquantity - $itemquantity; 
+
+	$statement  = $connect->prepare($deliveryorderquery);
+
+	$pos = $statement->fetchAll();
+
+	foreach ($pos as $po) {
+		$itemtotal = $po;
+	}
+	$doitemtotal = $_POST['item_total'][$count];
+	$total = $itemtotal - $doitemtotal;
+
+	$deliveryorderquery = "
+	UPDATE tblpurchaseorderitem SET quantity = :quantity, total = :total WHERE id = :purchaseorderitemid
+	";
+
+	$statement  = $connect->prepare($deliveryorderquery);
+
 	// if ($quantity < 0) {
 	// 	$quantity = 0;
 	// }
 	$statement->execute([
 		':purchaseorderitemid' => $purchaseorderitemid,
-		':quantity' => $quantity,
-
+		':quantity' = > $quantity,
+		':total' => $total;
 	]);
 
 	
