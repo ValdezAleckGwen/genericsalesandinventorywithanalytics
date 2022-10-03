@@ -3,7 +3,7 @@ require 'DbConnect.php';
 
 
 if (isset($_POST['branchid'])) {
-	$type = $_POST['rowType'];
+	
 	$output = '';
 	 
 			$branchid = $_POST['branchid'];
@@ -26,28 +26,9 @@ if (isset($_POST['branchid'])) {
 				$output .= '<td><input type="text" name="item_quantity[]" class="col col-sm-1 form-control item_minus" /></td>';
 
 				$output .= '<td><input type="text" name="item_quantity[]" class="col col-sm-1 form-control item_plus" /></td>';
-			
-				
-
 				
 				$output .= '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><i class="fas fa-minus"></i></button></td>';
 
-			
-		
-
-		
-
-
-
-
-		
-			
-			
-	
-	
-	
-	
-	
 
 } else {
 	$output = 'alert("no data available")';
