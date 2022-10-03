@@ -94,8 +94,8 @@ if(isset($_POST["item_id"]))
 	foreach ($pos as $po) {
 		$itemtotal = $po;
 	}
-	$doitemtotal = $_POST['item_total'][$count];
-	$total = $itemtotal - $doitemtotal;
+	$doitemtotal = preg_replace('/[^0-9]/s', "",$_POST["item_total"][$count]);
+	$total = floatval($doitemtotal) - floatval($itemtotal);
 
 	$deliveryorderquery = "
 	UPDATE tblpurchaseorderitem SET quantity = :quantity, total = :total WHERE id = :purchaseorderitemid
@@ -108,8 +108,8 @@ if(isset($_POST["item_id"]))
 	// }
 	$statement->execute([
 		':purchaseorderitemid' => $purchaseorderitemid,
-		':quantity' = > $quantity,
-		':total' => $total;
+		':quantity' => $quantity,
+		':total' => $total
 	]);
 
 	
