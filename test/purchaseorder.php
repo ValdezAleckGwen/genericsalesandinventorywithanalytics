@@ -41,6 +41,7 @@ function fill_unit_select_box_branch($connect)
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>PURCHASE ORDER</title>
 		<link rel="stylesheet" href="../admin/assets/style.css">
 		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -154,7 +155,7 @@ $(document).ready(function(){
 	var count = 0;
 	
 	$(document).on('click', '.add', function(){
-
+		var form_data = $('#insert_form').serialize();
 		var id = $('#supplier_id').val();
 		
 		var branchid = $('#branch_id').val();
@@ -164,7 +165,7 @@ $(document).ready(function(){
 		$.ajax({
         url: "../actions/addrowpurchaseorder.php",
         method: "POST",
-        data: {id: id},
+        data: {id: id, form_data},
         success: function (data) {
             
         	$('#item_table').append(data);
@@ -211,6 +212,26 @@ $(document).ready(function(){
 			count = count + 1;
 
 		});
+
+
+		//validation no duplicate product allowed
+
+		$('.item_id').each(function(){
+			var	itemid1 = $(this).val();
+
+			$('.item_id').each(function(){
+			var itemid2 = $(this).val();
+
+				if (itemid1 == itemid2) {
+					error = "<li>Duplicate products not allowed</li>";
+					return false;
+				}
+
+			});
+
+		});
+
+		//end of validation
 
 		count = 1;
 
