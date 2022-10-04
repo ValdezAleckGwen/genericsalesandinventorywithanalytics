@@ -155,25 +155,43 @@
         <!--product content-->
         </div>
         
-    </body>
+      <!-- modal start -->
+        <div class="modal modal-lg fade " id="salesmodal" role="dialog">  
+              <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                  </div>
+                  <div class="modal-body">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+              </div>      
+        </div>
+        <!-- modal end -->
+  </body>
 </html>
 <script>
   $(document).ready(function(){
+    //modal start
+    $(document).on('click', 'tr', function() {
+      var id = $(this).data('id');
 
-    // $("tr").each(function(){
+      $.ajax({
+        url: '../actions/salesmodal.php', //modal structure
+        type: 'post',
+        data: {id: id},
+        success: function(response){ 
+            $('.modal-body').html(response); 
+            $('#salesmodal').modal('show'); 
+        }
+    });
 
-    // var row = $(this).closest("tr");
-    // var quantity = $(this).closest('.quantity').val();
-
-    // console.log(quantity)
-
-    
-
-    // });
+    });
+    //modal end
 
 
 
-    //
     load_data(1);
 
     function load_data(page, query = '')

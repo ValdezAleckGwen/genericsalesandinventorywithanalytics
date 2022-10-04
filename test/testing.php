@@ -2,28 +2,33 @@
 	include '../actions/adddata.php';
 	include('../actions/database_connection.php');
 
+$id = 'S-0000001';
+$query = "SELECT 
+tblsales.id AS salesid,
+tblproducts.id AS productid,
+tblproducts.name AS name,
+tblsalesitem.quantity AS quantity,
+tblsalesitem.price AS price,
+tblsales.vat AS Tax,
+tblsales.vattablesale AS VattableSale,
+tblsales.total  AS grandtotal
+FROM tblsales 
+INNER JOIN tblsalesitem
+ON tblsalesitem.salesid=tblsales.id
+INNER JOIN tblproducts
+ON tblsalesitem.productid=tblproducts.id
+WHERE tblsales.id = :id";
 
-	$deliveryorderquery = "
-	SELECT total FROM tblpurchaseorderitem WHERE id = :purchaseorderitemid;
-	";
 
 
+$statement  = $connect->prepare($query);
+$statement->execute([
+    ':id' => $id,
 
+]);
 
-	$itemtotal = 0;
-	$purchaseorderitemid = 'PI-0000001';
+$sales = $statement->fetchAll();
 
-
-	$statement  = $connect->prepare($deliveryorderquery);
-	$statement->execute([
-		':purchaseorderitemid' => $purchaseorderitemid
-	]);
-	$pos = $statement->fetchAll();
-
-	foreach ($pos as $po) {
-		$itemtotal = $po[0];
-	}
-
-	echo $itemtotal;
+echo var_dump($sales);
 
  ?>
