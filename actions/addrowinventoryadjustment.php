@@ -10,8 +10,7 @@ if (isset($_POST['branchid'])) {
 			$db = new DbConnect;
 			$conn = $db->connect();
 
-			$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblbranch.id AS branch, tblproducts.id AS productid FROM tblinventory
- 			INNER JOIN tblproducts ON tblinventory.productid=tblproducts.id INNER JOIN tblbranch ON tblbranch.id=tblinventory.branchid WHERE tblbranch.id = :branchid");
+			$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblbranch.id AS branch FROM tblinventory INNER JOIN tblbranch ON tblbranch.id=tblinventory.branchid WHERE tblbranch.id = :branchid");
 			$stmt->execute(['branchid' => $branchid]);
 			$inventories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				$output = '';
@@ -22,12 +21,13 @@ if (isset($_POST['branchid'])) {
 				$output .= '<option value="'. $inventory['inventory'] .'">'. $inventory['inventory'] .'</option>';
 				}
 				$output .= '</select></td>';
-				$output .= '<td><input type="text" name="item_code[]" class="col col-sm-5 form-control item_code" readonly/></td>';
 				$output .= '<td><input type="text" name="item_name[]" class="col col-sm-5 form-control item_name" readonly/></td>';
 
-				$output .= '<td><input type="number" name="available_quantity[]" class="col col-sm-2 form-control available_quantity" readonly></td>';
+				$output .= '<td><input type="number" name="item_quantity[]" class="col col-sm-2 form-control item_quantity"/>';
 
-				$output .= '<td><input type="number" name="item_quantity[]" class="col col-sm-2 form-control item_quantity"/></td>';
+				$output .= '<td><input type="number" name="adjustment_quantity[]" class="adjustment_quantity" readonly></td>';
+
+
 
 
 				$output .= '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><i class="fas fa-minus"></i></button></td>';

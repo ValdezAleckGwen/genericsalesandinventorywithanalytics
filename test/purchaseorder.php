@@ -319,7 +319,7 @@ $(document).ready(function(){
 $(document).ready(function(){
   
 	$(document).on("change", ".item_id", function  () {
-        //computeTotal();
+        
         var dataType = 2;
         var currentRow = $(this).closest("tr");
         var productid = $(this).val();

@@ -118,17 +118,18 @@ if (isset($_POST['productid'])) {
 					$db = new DbConnect;
 					$conn = $db->connect();
 						
-					$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblinventory.quantity AS count, tblproducts.id AS product, tblproducts.name AS name  FROM tblinventory INNER JOIN tblproducts ON tblinventory.productid=tblproducts.id WHERE tblinventory.id = :inventoryid");
+					$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblinventory.quantity AS count, tblproducts.id AS product, tblproducts.name AS name, tblinventory.quantity AS quantity FROM tblinventory INNER JOIN tblproducts ON tblinventory.productid=tblproducts.id WHERE tblinventory.id = :inventoryid");
 					$stmt->execute([':inventoryid' => $inventoryid]);
 					$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					
 					foreach ($products as $product) {
-						$data['name'] = $product['name'],
-						$data['quantity'] = $product['quantity']
+						$data['name'] = $product['name'];
+						$data['quantity'] = $product['quantity'];
 					}
 
 					
 					echo json_encode($data);
+					
 				} else {
 					echo "sadness";
 				}	
