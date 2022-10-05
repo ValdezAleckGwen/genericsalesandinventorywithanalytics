@@ -121,10 +121,10 @@ function fill_unit_select_box_branch($connect)
 									<th width="15%">Item ID</th>
 									<th width="15%">PO ID</th>
 									<th width="15%">Product Code</th>
-									<th width="30%">Product Name</th>
+									<th width="18%">Product Name</th>
 									<th width="10%">Price</th>
-									<th width="5%">Quantity</th>
-									<th width="10%">Total Price</th>
+									<th width="15.4%">Quantity</th>
+									<th width="14%">Total Price</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
 								</thead>
