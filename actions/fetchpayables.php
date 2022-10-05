@@ -72,7 +72,7 @@ if($total_data > 0)
   foreach($result as $row)
   {
     $output .= '
-    <tr>
+    <tr data-id="'.$row["pyid"].'">
       <td style="border: 1px solid;">'.$row["pyid"].'</td>
       <td style="border: 1px solid;">'.$row["username"].'</td>
       <td style="border: 1px solid;">'.$row["calendar"].'</td>

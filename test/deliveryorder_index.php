@@ -3,13 +3,14 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Delivery Order</title>
+        <title>DELIVERY ORDER</title>
         <link rel="stylesheet" href="../admin/assets/style.css">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
         <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script> 
         <script src='https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js'></script>
+
     </head>
     
     </style>
@@ -141,11 +142,8 @@
   <div class="flex-container">
      <div class="flex-items">
        <div class="table-title">
-        <h3>Delivery Order</h3>
+        <h3>DELIVERY ORDER</h3>
         <div style="display: inline">
-           <a href="addproduct_index.php">
-              <button type="button" class="btn btn-primary" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-circle-plus"></i> Add</button>
-            </a>
             <button type="button" class="btn btn-dark" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-print"></i> Print</button>
         <div style="float: right;">
             <label><span>Search: </span><input type="text" name="search_box" id="search_box" value=""/></label>       
@@ -157,10 +155,44 @@
         <!--product content-->
         </div>
         
-    </body>
+      <!-- modal start -->
+        <div class="modal modal-lg fade " id="domodal" role="dialog">  
+              <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                  </div>
+                  <div class="modal-body">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+              </div>      
+        </div>
+        <!-- modal end -->
+  </body>
 </html>
 <script>
   $(document).ready(function(){
+    //modal start
+    $(document).on('click', 'tr', function() {
+      var id = $(this).data('id');
+      
+
+      $.ajax({
+        url: '../actions/domodal.php', //modal structure
+        type: 'post',
+        data: {id: id},
+        success: function(response){ 
+            $('.modal-body').html(response); 
+            $('#domodal').modal('show'); 
+        }
+    });
+
+    });
+    //modal end
+
+
+
     load_data(1);
 
     function load_data(page, query = '')

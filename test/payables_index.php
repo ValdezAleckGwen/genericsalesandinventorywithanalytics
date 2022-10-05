@@ -154,26 +154,45 @@
         <div border='1' class='table-responsive' id="dynamic_content">
         <!--product content-->
         </div>
+
+              <!-- modal start -->
+        <div class="modal modal-lg fade " id="payablesmodal" role="dialog">  
+              <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                  </div>
+                  <div class="modal-body">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+              </div>      
+        </div>
+        <!-- modal end -->
         
     </body>
 </html>
 <script>
   $(document).ready(function(){
+    //modal start
+    $(document).on('click', 'tr', function() {
+      var id = $(this).data('id');
+      alert(id);
+      
 
-    // $("tr").each(function(){
+      $.ajax({
+        url: '../actions/payablemodal.php', //modal structure
+        type: 'post',
+        data: {id: id},
+        success: function(response){ 
+            $('.modal-body').html(response); 
+            $('#payablesmodal').modal('show'); 
+        }
+    });
 
-    // var row = $(this).closest("tr");
-    // var quantity = $(this).closest('.quantity').val();
+    });
+    //modal end
 
-    // console.log(quantity)
-
-    
-
-    // });
-
-
-
-    //
     load_data(1);
 
     function load_data(page, query = '')
