@@ -93,7 +93,7 @@ function fill_unit_select_box_branch($connect)
     <div class="main">
 
   
-    <h3>DELIVERY ORDER</h3><br>
+    <h3 style="margin-top: 40px;">DELIVERY ORDER</h3><br>
 		<div class="container">
 			<br />
 			<div class="card">
@@ -102,7 +102,6 @@ function fill_unit_select_box_branch($connect)
 					<form method="post" id="insert_form">
 						<div class="table-repsonsive">
 							<span id="error"></span>
-							<table class="table table-bordered" id="item_table">
 							<div class="float-end">
 								<label for="po_number">PO #:</label>
 								<input type="text" name="do_number" class="input-field" value="<?php echo createId('tblpurchaseorder'); ?>" id="do_number" readonly>
@@ -116,7 +115,8 @@ function fill_unit_select_box_branch($connect)
 								<label for="branch_id">For Branch</h5>
 								<select name="branch_id" class="p-2 col col-sm-2 form-control selectpicker branch_id" id="branch_id"><option value="">Select Supplier</option><?php echo fill_unit_select_box_branch($connect); ?></select>
 							</div>
-
+							<table class="table table-bordered" id="item_table" style="max-height: 150px; overflow-y: scroll !important;">
+								<thead style=" display: block; ">
 								<tr>
 									<th width="15%">Item ID</th>
 									<th width="15%">PO ID</th>
@@ -127,25 +127,35 @@ function fill_unit_select_box_branch($connect)
 									<th width="10%">Total Price</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
+								</thead>
+								<tbody id="add-row" style="display: block; height: 500px;overflow-y: auto;overflow-x: hidden;">
+							<tr>
+									
+								</tr>
+							</tbody>
 							<footer>
 							<div class="row">
 
-								<div class="col-sm-7">
-									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
-								</div class="col-sm-5">
+								<div class="col-sm-5">
 									<div class="input-group mb-3">
 									  <span class="input-group-text" id="basic-addon3">Total</span>
 									  <input type="text" name="total" id="total" class="form-control total" readonly/>
 									</div>
-									
 								</div>
-							</footer>
-							</table>
 							</div>
+							
+							</footer>
+							
+							</table>
+								
+							</div>
+								<div class="col-sm-6">
+									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
+								</div>
 						</div>
 					</form>
-					
 				</div>
+								
 			</div>
 		</div>
 	</body>
@@ -168,12 +178,10 @@ $(document).ready(function(){
         url: "../actions/addrowdeliveryorder.php",
         method: "POST",
         data: {id: id, branchid, branchid},
-        success: function (data) {
-            
-        	$('#item_table').append(data);
-
+        success: function (data) {            
+        	//$('#item_table').append(data);
+			$(data).insertAfter($("#add-row > tr").eq(0));
 			$('.selectpicker').selectpicker('refresh');
-
             }
         });
 
@@ -214,25 +222,6 @@ $(document).ready(function(){
 			count = count + 1;
 
 		});
-
-		//validation no duplicate product allowed
-
-		$('.item_id').each(function(){
-			var	itemid1 = $(this).val();
-
-			$('.item_id').each(function(){
-			var itemid2 = $(this).val();
-
-				if (itemid1 == itemid2) {
-					error = "<li>Duplicate products not allowed</li>";
-					return false;
-				}
-
-			});
-
-		});
-
-		//end of validation
 
 		count = 1;
 
