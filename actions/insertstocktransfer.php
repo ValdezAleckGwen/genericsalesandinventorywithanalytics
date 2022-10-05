@@ -6,45 +6,34 @@ include('database_connection.php');
 if(isset($_POST["item_id"]))
 {
 
+	//create main stock transfer
 	
+	$stocktransferid = createId('tblstocktransfer');
+	$sourcebranch = $_POST['source_branch'];
+	$destinationbranch = $_POST['destination_branch'];
 
-	
-	
-	$salesid = createId('tblsales');
-	
-	$total = preg_replace('/[^0-9]/s', "",$_POST["total"]);
-	$vattableSale = $_POST['vatable-sale'];
-	$vat = $_POST['vat'];
-	$taxid = $_POST['tax'];
-	$pending = 1;
-	$userid = 'U-0000001';
-	$branchid = 'B-0000001';
+
 	$audit = 'A-0000001';
 
 	// create a sale
 	$salesquery = "
-	INSERT INTO tblsales (id, total, taxid, vat, vattablesale, pending, userid, branchid, auditid, active) VALUES (:salesid, :total, :taxid, :vat, :vattablesale, :pending, :userid, :branchid, :audit, 1)
+	INSERT INTO tblstocktransfer (id, source, destination, auditid) VALUES (:id, :source, :destination, :auditid)
 	";
 
 	$statement  = $connect->prepare($salesquery);
 	$statement->execute([
-		':salesid' => $salesid,
-		':total' => $total,
-		':taxid' => $taxid,
-		':vat' => $vat,
-		':vattablesale' => $vattableSale,
-		':pending' => $pending,
-		':userid' => $userid,
-		':branchid' => $branchid,
-		':audit' => $audit,
-		
+		':id' => $stocktransferid,
+		':source' => $sourcebranch,
+		':destination' => $destinationbranch,
+		':auditid' => $audit,
+
 	]);
 
 	
 
 	$result = $statement->fetchAll();
 
-	//create sales item
+	//create create stock transfer items
 	for($count = 0; $count < count($_POST["item_id"]); $count++)
 	{
 
@@ -76,7 +65,7 @@ if(isset($_POST["item_id"]))
 
 	$result = $statement->fetchAll();
 	
-	//remove item from inventory
+	//either add to inventory or create new inventory
 	
 
 	if(isset($result))

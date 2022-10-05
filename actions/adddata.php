@@ -68,6 +68,9 @@
 			case 'tblinventoryadjustmentitem':
 				$index = "II-";
 				break;
+			case 'tblstocktransfer':
+				$index = "ST-";
+				break;
 			default:
 				$index = "";
 				break;
