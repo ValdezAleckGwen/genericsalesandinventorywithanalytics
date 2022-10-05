@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Purchase Order</title>
+        <title>PURCHASE ORDER</title>
         <link rel="stylesheet" href="../admin/assets/style.css">
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
         <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
@@ -158,11 +158,43 @@
         <div border='1' class='table-responsive' id="dynamic_content">
         <!--product content-->
         </div>
+
+        <!-- modal start -->
+        <div class="modal modal-lg fade " id="pomodal" role="dialog">  
+              <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                  </div>
+                  <div class="modal-body">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+              </div>      
+        </div>
+        <!-- modal end -->
         
     </body>
 </html>
 <script>
   $(document).ready(function(){
+    //modal start
+    $(document).on('click', 'tr', function() {
+      var id = $(this).data('id');
+      
+
+      $.ajax({
+        url: '../actions/pomodal.php', //modal structure
+        type: 'post',
+        data: {id: id},
+        success: function(response){ 
+            $('.modal-body').html(response); 
+            $('#pomodal').modal('show'); 
+        }
+    });
+
+    });
+    //modal end
     load_data(1);
 
     function load_data(page, query = '')
