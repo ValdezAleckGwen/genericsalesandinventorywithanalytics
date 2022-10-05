@@ -29,17 +29,22 @@ else
 $query = "
 SELECT 
 tblsales.id AS salesid,
-tblsales.total AS total,
-tblbranch.name AS branchname
-FROM `tblsales` INNER JOIN tblbranch 
+tblbranch.name AS branchname,
+tblusers.lastname as username,
+tblsales.date as calendar,
+tblsales.total AS total
+FROM tblsales 
+INNER JOIN tblbranch 
 ON tblsales.branchid=tblbranch.id
+INNER JOIN tblusers 
+ON tblsales.userid=tblusers.id
 WHERE tblsales.active = 1
 ";
 
 if($_POST['query'] != '')
 {
   $query .= '
-  AND salesid LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
+  AND tblsales.id LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
   ';
 }
 
@@ -62,6 +67,8 @@ $output = '
   <tr>
     <th class="text-center" style="border: 1px solid;">Sales ID</th>
     <th class="text-center" style="border: 1px solid;">Branch</th>
+    <th class="text-center" style="border: 1px solid;">Creator</th>
+    <th class="text-center" style="border: 1px solid;">Date</th>
     <th class="text-center" style="border: 1px solid;">Total (₱)</th>
   </tr>
 ';
@@ -70,9 +77,11 @@ if($total_data > 0)
   foreach($result as $row)
   {
     $output .= '
-    <tr>
+    <tr data-id="'.$row["salesid"].'">
       <td style="border: 1px solid;">'.$row["salesid"].'</td>
       <td style="border: 1px solid;">'.$row["branchname"].'</td>
+      <td style="border: 1px solid;">'.$row["username"].'</td>
+      <td style="border: 1px solid;">'.$row["calendar"].'</td>
       <td class="text-right" style="border: 1px solid;">'.$row["total"].'</td>
       
 

@@ -1,12 +1,14 @@
 <?php
-require_once 'DbConnect.php';
+	
+require_once '../actions/DbConnect.php';
 
-if (isset($_POST['productid'])) {
-	$datatype = $_POST['dataType'];
+$datatype = 5;
+$inventoryid = 'I-0000029';
+$id = 'I-0000002';
 	
 	switch ($datatype) {
 		case 1:
-			$inventoryid = $_POST['productid'];
+			
 			if ($inventoryid != 0) {
 				$db = new DbConnect;
 				$conn = $db->connect();
@@ -29,7 +31,7 @@ if (isset($_POST['productid'])) {
 			break;
 		
 		case 2:
-			$inventoryid = $_POST['productid'];
+			
 			if ($inventoryid != 0) {
 				$db = new DbConnect;
 				$conn = $db->connect();
@@ -52,7 +54,7 @@ if (isset($_POST['productid'])) {
 			break;
 
 		case 3:
-		$poitemid = $_POST['productid'];
+		
 			if ($poitemid != 0) {
 				$db = new DbConnect;
 				$conn = $db->connect();
@@ -82,7 +84,7 @@ if (isset($_POST['productid'])) {
 			break;
 
 		case 4:
-		$id = $_POST['productid'];
+		
 			if ($id != 0) {
 				$db = new DbConnect;
 				$conn = $db->connect();
@@ -113,7 +115,7 @@ if (isset($_POST['productid'])) {
 			break;
 
 		case 5:
-			$inventoryid = $_POST['productid'];
+			
 				if ($inventoryid != 0) {
 					$db = new DbConnect;
 					$conn = $db->connect();
@@ -123,7 +125,6 @@ if (isset($_POST['productid'])) {
 					$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					
 					foreach ($products as $product) {
-						$data['productid'] = $product['product'];
 						$data['name'] = $product['name'];
 						$data['quantity'] = $product['quantity'];
 					}
@@ -147,12 +148,9 @@ if (isset($_POST['productid'])) {
 
 	
 
+echo var_dump($data);
 
 
-} else {
-	echo "0";
-}
+
 
  ?>
-
-

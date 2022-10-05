@@ -1,7 +1,7 @@
 <?php
 require 'DbConnect.php';
 
-
+ 
 if (isset($_POST['id'])) {
 	$output = '';
 

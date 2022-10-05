@@ -27,29 +27,24 @@ else
 }
 
 $query = "
-SELECT tblpurchaseorder.id AS poid, 
-tblbranch.name AS branchname, 
-tblsupplier.name AS suppliername,
-tblusers.lastname AS username,
-tblpurchaseorder.date AS det,
-tblpurchaseorder.total as total
-FROM tblpurchaseorder 
-INNER JOIN tblbranch
-ON tblpurchaseorder.branchid=tblbranch.id
-INNER JOIN tblsupplier 
-ON tblpurchaseorder.supplierid=tblsupplier.id
-INNER JOIN tblusers 
-ON tblpurchaseorder.userid=tblusers.id
+SELECT tblpayables.id AS pyid, 
+tblusers.lastname as username,
+tblpayables.date as calendar,
+tblpayables.total as total
+FROM tblpayables 
+INNER JOIN tblusers
+ON tblpayables.userid=tblusers.id
+WHERE tblpayables.active = 1
 ";
 
 if($_POST['query'] != '')
 {
   $query .= '
-  AND tblpurchaseorder.name LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
+  AND tblpayables.id LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
   ';
 }
 
-$query .= 'ORDER BY tblpurchaseorder.id ASC ';
+$query .= 'ORDER BY tblpayables.id ASC ';
 
 $filter_query = $query . 'LIMIT '.$start.', '.$limit.'';
 
@@ -67,11 +62,9 @@ $output = '
 <table class="table table-striped table-bordered" style="background: #CDCDCD; border-collapse: collapse;">
   <tr>
         <th class="text-center" style="border: 1px solid;">Purchase Order ID</th>
-        <th class="text-center" style="border: 1px solid;">Branch</th>
-        <th class="text-center" style="border: 1px solid;">Supplier</th>
         <th class="text-center" style="border: 1px solid;">Creator</th>
-        <th class="text-left" style="border: 1px solid;">Date</th>
-        <th class="text-left" style="border: 1px solid;">Total(₱)</th>
+        <th class="text-center" style="border: 1px solid;">Date</th>
+        <th class="text-left" style="border: 1px solid;">Total (₱)</th>
   </tr>
 ';
 if($total_data > 0)
@@ -79,12 +72,10 @@ if($total_data > 0)
   foreach($result as $row)
   {
     $output .= '
-    <tr data-id="'.$row["poid"].'">
-      <td style="border: 1px solid;">'.$row["poid"].'</td>
-      <td style="border: 1px solid;">'.$row["branchname"].'</td>
-      <td style="border: 1px solid;">'.$row["suppliername"].'</td>
+    <tr data-id="'.$row["pyid"].'">
+      <td style="border: 1px solid;">'.$row["pyid"].'</td>
       <td style="border: 1px solid;">'.$row["username"].'</td>
-      <td style="border: 1px solid;">'.$row["det"].'</td>
+      <td style="border: 1px solid;">'.$row["calendar"].'</td>
       <td style="border: 1px solid;">'.$row["total"].'</td>
     </tr>
     ';
@@ -207,7 +198,7 @@ for($count = 0; $count < count($page_array); $count++)
     else
     {
       // $page_link .= '
-      // <li class="page-item"><a class="page-link" id="itlog" href="javascript:void(0)" data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>
+      // <li class="page-item"><a class="page-link" id="egglog" href="javascript:void(0)" data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>
       // ';
     }
   }

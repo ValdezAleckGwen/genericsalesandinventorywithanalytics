@@ -2,14 +2,25 @@
 require 'DbConnect.php';
 
 
+
 if (isset($_POST['id'])) {
 	$output = '';
 
 			$supplierid = $_POST['id'];
 			$db = new DbConnect;
 			$conn = $db->connect();
+			$query = "SELECT tblproducts.id AS productid, tblsupplier.name as suppliername FROM tblproducts INNER JOIN tblsupplier ON tblproducts.supplier=tblsupplier.id WHERE tblsupplier.id = :supplierid ";
 
-			$stmt = $conn->prepare("SELECT tblproducts.id AS productid, tblsupplier.name as suppliername FROM tblproducts INNER JOIN tblsupplier ON tblproducts.supplier=tblsupplier.id WHERE tblsupplier.id = :supplierid ");
+			//check if the id is selected
+			// if (isset($_POST['item_id'])) {
+			// 	for($count = 0; $count < count($_POST["item_id"]); $count++)
+			// 	{
+			// 		$query .= 'AND  tblproducts.id != '.$_POST['item_id'][$count].' ';
+
+			// 	}
+			// }
+			$stmt = $conn->prepare($query);
+
 			$stmt->execute(['supplierid' => $supplierid]);
 			$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				$output = '';
