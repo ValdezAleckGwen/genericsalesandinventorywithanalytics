@@ -118,10 +118,10 @@ function fill_unit_select_box_branch($connect)
 							<table class="table table-bordered" id="item_table" style="max-height: 150px; overflow-y: scroll !important;">
 								<thead style=" display: block; ">
 								<tr>
-									<th width="15%">Item ID</th>
+									<th width="10%">Item ID</th>
 									<th width="15%">PO ID</th>
 									<th width="15%">Product Code</th>
-									<th width="30%">Product Name</th>
+									<th width="20%">Product Name</th>
 									<th width="10%">Price</th>
 									<th width="5%">Quantity</th>
 									<th width="10%">Total Price</th>
