@@ -107,10 +107,12 @@ function fill_unit_select_box_branch($connect)
 							</div>
 							<table class="table table-bordered" id="item_table">
 								<tr>
-									<th width="20%">Product Code</th>
+									<th width="15%">Inventory Code</th>
+									<th width="15%">Product Code</th>
 									<th width="50%">Product Name</th>
-									<th width="10%"><i class="fa-sharp fa-solid fa-minus"></i></th>
-									<th width="10%"><i class="fa-sharp fa-solid fa-plus"></i></th>
+									<th width="15%">Avaible Item</th>
+									<th width="15%">Item Transfer</th>
+									
 
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
@@ -137,14 +139,13 @@ $(document).ready(function(){
 
 	$(document).on('click', '.add', function(){
 
-		var id = $('#source_branch').val();
-		var rowType = 1;
+		var branchid = $('#source_branch').val();
 		count++;
 
 		$.ajax({
         url: "../actions/addrow.php",
         method: "POST",
-        data: {id: id, rowType: rowType},
+        data: {branchid: branchid},
         success: function (data) {
             
         	$('#item_table').append(data);
@@ -229,7 +230,7 @@ $(document).ready(function(){
 
 			$.ajax({
 
-				url:"../actions/insert.php",
+				url:"../actions/insertstocktransfer.php",
 
 				type:"POST",
 
@@ -285,6 +286,8 @@ $(document).ready(function(){
         var currentRow = $(this).closest("tr");
         var inventoryid = $(this).val();
         var name = currentRow.find(".item_name");
+        var code = currentRow.find(".item_code");
+        var quantity = currentRow.find(".item_available");
         
         $.ajax({
             url: "../actions/fetchinventoryinfo.php",
@@ -292,6 +295,8 @@ $(document).ready(function(){
             data: {inventoryid: inventoryid},
             dataType: "JSON",
             success: function (data) {
+            	quantity.val(data.quantity);
+            	code.val(data.productid);
                 name.val(data.name); 
             } 
 
