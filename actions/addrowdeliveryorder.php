@@ -16,7 +16,7 @@ if (isset($_POST['id'])) {
 				$output = '';
 				$output .= '<tr style="display: block;">';
 
-				$output .= '<td width="14.77%"><select name="item_id[]" class="col col-sm-2 form-control selectpicker item_id" data-live-search="true"><option value="">Select Unit</option>';;
+				$output .= '<td width="14.78%"><select name="item_id[]" class="col col-sm-2 form-control selectpicker item_id" data-live-search="true"><option value="">Select Unit</option>';;
 				foreach ($poitems as $poitem) {
 				$output .= '<option value="'. $poitem['poitemid'] .'">'. $poitem['poitemid'] .'</option>';
 				}
