@@ -28,7 +28,9 @@ if (isset($_POST['branchid'])) {
 
 				$output .= '<td><input type="number" name="item_quantity[]" class="col col-sm- form-control item_quantity" readonly/>';
 
-				$output .= '<td><input type="number" name="adjustment_quantity[]" class="col col-sm adjustment_quantity" ></td>';
+				$output .= '<td><input type="number" name="adjustment_quantityminus[]" class="col col-sm adjustment_quantityminus" ></td>';
+
+				$output .= '<td><input type="number" name="adjustment_quantityplus[]" class="col col-sm adjustment_quantityplus" ></td>';
 
 
 

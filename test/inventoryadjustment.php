@@ -105,7 +105,8 @@ function fill_unit_select_box_branch($connect)
 									<th width="20%">Product Code</th>
 									<th width="40%">Product Name</th>
 									<th width="10%">Available Quantity</th>
-									<th width="20%">Adjustment Quantity</th>
+									<th width="20%">Adjustment Quantity -</th>
+									<th width="20%">Adjustment Quantity +</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
 							<footer>

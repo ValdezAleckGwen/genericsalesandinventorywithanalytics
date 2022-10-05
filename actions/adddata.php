@@ -65,7 +65,7 @@
 			case 'tblinventoryadjustment':
 				$index = "IA-";
 				break;
-			case 'tblinventoryadjustmentid':
+			case 'tblinventoryadjustmentitem':
 				$index = "II-";
 				break;
 			default:

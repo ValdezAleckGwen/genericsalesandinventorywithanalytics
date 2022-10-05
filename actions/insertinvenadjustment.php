@@ -33,16 +33,19 @@ if(isset($_POST["item_id"]))
 
 		$query = "
 		INSERT INTO tblinventoryadjustmentitem 
-        (id, invadjid, productid,  quantity) 
-        VALUES (:id, :invenadjustmentid, :productid, :quantity)
+        (id, invadjid, inventoryid, productid,  quantity) 
+        VALUES (:id, :invadjid, :inventoryid, :productid, :quantity)
 		";
 
-		$id = createId('tbldeliveryorderitem'); //incrementing delivery order item id
+		$id = createId('tblinventoryadjustmentitem'); //incrementing delivery order item id
 		$inventoryid = $_POST["item_id"][$count];
 		$productid = $_POST["item_code"][$count];
 		$availablequantity = $_POST["item_quantity"][$count];
-		$adjustmentquantity = $_POST["adjustment_quantity"][$count];
-		$quantity = $availablequantity - $adjustmentquantity;
+		$adjustmentquantityplus = intval($_POST["adjustment_quantityplus"][$count]);
+		$adjustmentquantityminus = intval($_POST["adjustment_quantityminus"][$count]);
+		$adjustmentquantity = $adjustmentquantityplus - $adjustmentquantityminus;
+		$quantity = 0;
+		$quantity = $availablequantity + $adjustmentquantity;
 		if ($quantity < 0) {
 			$quantity = 0;
 		}
@@ -52,7 +55,38 @@ if(isset($_POST["item_id"]))
 			array(
 				':id'	    	=>	$id,
 				':invadjid' 	=>  $invenadjustmentid,
+				':inventoryid' 	=>  $inventoryid,
 				':productid'	=>	$productid,
+				':quantity'     =>	$adjustmentquantity
+			)
+		);
+
+	}
+
+	$result = $statement->fetchAll();
+
+	for($count = 0; $count < count($_POST["item_id"]); $count++)
+	{
+
+		$query = "
+		UPDATE tblinventory SET quantity = :quantity WHERE tblinventory.id = :inventoryid
+		";
+
+		$inventoryid = $_POST["item_id"][$count];
+		$availablequantity = $_POST["item_quantity"][$count];
+		$adjustmentquantityplus = intval($_POST["adjustment_quantityplus"][$count]);
+		$adjustmentquantityminus = intval($_POST["adjustment_quantityminus"][$count]);
+		$adjustmentquantity = $adjustmentquantityplus - $adjustmentquantityminus;
+		$quantity = 0;
+		$quantity = $availablequantity + $adjustmentquantity;
+		if ($quantity < 0) {
+			$quantity = 0;
+		}
+		$statement = $connect->prepare($query);
+		
+		$statement->execute(
+			array(
+				':inventoryid' 	=>  $inventoryid,
 				':quantity'     =>	$quantity
 			)
 		);
@@ -60,7 +94,6 @@ if(isset($_POST["item_id"]))
 	}
 
 	$result = $statement->fetchAll();
-	
 
 
 	if(isset($result))
