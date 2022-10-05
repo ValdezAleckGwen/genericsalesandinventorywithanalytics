@@ -21,16 +21,19 @@ if (isset($_POST['branchid'])) {
 				$output .= '<option value="'. $inventory['inventory'] .'">'. $inventory['inventory'] .'</option>';
 				}
 				$output .= '</select></td>';
+
+				$output .= '<td><input type="text" name="item_code[]" class="col col-sm-2 form-control item_code" readonly/></td>';
+
 				$output .= '<td><input type="text" name="item_name[]" class="col col-sm-5 form-control item_name" readonly/></td>';
 
-				$output .= '<td><input type="number" name="item_quantity[]" class="col col-sm-2 form-control item_quantity"/>';
+				$output .= '<td><input type="number" name="item_quantity[]" class="col col-sm- form-control item_quantity" readonly/>';
 
-				$output .= '<td><input type="number" name="adjustment_quantity[]" class="adjustment_quantity" readonly></td>';
-
-
+				$output .= '<td><input type="number" name="adjustment_quantity[]" class="col col-sm adjustment_quantity" ></td>';
 
 
-				$output .= '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><i class="fas fa-minus"></i></button></td>';
+
+
+				$output .= '<td><button type="button" name="remove" class="btn btn-danger btn-sm remove"><i class="fas fa-minus"></i></button></td></tr>';
 
 
 } else {

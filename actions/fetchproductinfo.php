@@ -123,6 +123,7 @@ if (isset($_POST['productid'])) {
 					$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 					
 					foreach ($products as $product) {
+						$data['productid'] = $product['product'];
 						$data['name'] = $product['name'];
 						$data['quantity'] = $product['quantity'];
 					}

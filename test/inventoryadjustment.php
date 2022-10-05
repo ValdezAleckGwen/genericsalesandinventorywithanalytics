@@ -27,7 +27,7 @@ function fill_unit_select_box_branch($connect)
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>DELIVERY ORDER</title>
+		<title>INVENTORY ADJUSTMENT</title>
 		<link rel="stylesheet" href="../admin/assets/style.css">
 		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -79,7 +79,7 @@ function fill_unit_select_box_branch($connect)
     <div class="main">
 
   
-    <h3>DELIVERY ORDER</h3><br>
+    <h3>INVENTORY ADJUSTMENT</h3><br>
 		<div class="container">
 			<br />
 			<div class="card">
@@ -102,9 +102,10 @@ function fill_unit_select_box_branch($connect)
 
 								<tr>
 									<th width="20%">Inventory ID</th>
-									<th width="50%">Product Name</th>
+									<th width="20%">Product Code</th>
+									<th width="40%">Product Name</th>
 									<th width="10%">Available Quantity</th>
-									<th width="10%">Adjustment Quantity</th>
+									<th width="20%">Adjustment Quantity</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
 							<footer>
@@ -189,24 +190,6 @@ $(document).ready(function(){
 
 		});
 
-		//validation no duplicate product allowed
-
-		$('.item_id').each(function(){
-			var	itemid1 = $(this).val();
-
-			$('.item_id').each(function(){
-			var itemid2 = $(this).val();
-
-				if (itemid1 == itemid2) {
-					error = "<li>Duplicate products not allowed</li>";
-					return false;
-				}
-
-			});
-
-		});
-
-		//end of validation
 
 		count = 1;
 
@@ -234,8 +217,7 @@ $(document).ready(function(){
 
 			$.ajax({
 
-				url:"../actions/insertdeliveryorder.php",
-				// url:"../actions/testing.php",
+				url:"../actions/insertinvenadjustment.php",
 
 				type:"POST",
 
@@ -302,6 +284,7 @@ $(document).ready(function(){
             data: {productid: productid, dataType: dataType},
             dataType: "JSON",
             success: function (data) {
+            	itemid.val(data.productid);
             	name.val(data.name);
                 quantity.val(data.quantity);	
                 

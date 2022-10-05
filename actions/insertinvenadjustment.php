@@ -6,23 +6,19 @@ include('database_connection.php');
 if(isset($_POST["item_id"]))
 {
 
-	$invenadjustmentid = createId('tbldeliveryorder');
+	$invenadjustmentid = $_POST['ia_number'];
 	$branchid = $_POST['branch_id'];
-	$deliveryoderid = $_POST['do_number'];
-	$total = preg_replace('/[^0-9]/s', "",$_POST["total"]);
-	$userid = 'U-0000001';
 	$audit = 'A-0000001';
 
 	// create a delivery order
 	$deliveryorderquery = "
-	INSERT INTO tblinventoryadjustment (id, branchid, userid, auditid) VALUES (:id, :branchid, :userid,  :audit)
+	INSERT INTO tblinventoryadjustment (id, branchid, auditid) VALUES (:id, :branchid,  :audit)
 	";
 
 	$statement  = $connect->prepare($deliveryorderquery);
 	$statement->execute([
 		':id' => $invenadjustmentid,
 		':branchid' => $branchid,
-		':userid' => $userid,
 		':audit' => $audit
 	]);
 
@@ -37,23 +33,27 @@ if(isset($_POST["item_id"]))
 
 		$query = "
 		INSERT INTO tblinventoryadjustmentitem 
-        (id, invadjid, productid, supplierid, quantity) 
-        VALUES (:invadjitem, :invenadjustmentid, :productid,  :branchid, :supplierid, :quantity)
+        (id, invadjid, productid,  quantity) 
+        VALUES (:id, :invenadjustmentid, :productid, :quantity)
 		";
 
-		$invadjitem = createId('tbldeliveryorderitem'); //incrementing delivery order item id
-		$purchaseorderid = $_POST['po_id'][$count];
+		$id = createId('tbldeliveryorderitem'); //incrementing delivery order item id
+		$inventoryid = $_POST["item_id"][$count];
 		$productid = $_POST["item_code"][$count];
-		$item_quantity = $_POST["item_quantity"][$count];
-		$item_quantity = $_POST["available_quantity"][$count];
+		$availablequantity = $_POST["item_quantity"][$count];
+		$adjustmentquantity = $_POST["adjustment_quantity"][$count];
+		$quantity = $availablequantity - $adjustmentquantity;
+		if ($quantity < 0) {
+			$quantity = 0;
+		}
 		$statement = $connect->prepare($query);
 		
 		$statement->execute(
 			array(
-				':invadjitem'	    =>	$invadjitem,
-				':invadjid' 		=> $invenadjustmentid,
-				':productid'		=>	$productid,
-				':item_quantity'    =>	$item_quantity,
+				':id'	    	=>	$id,
+				':invadjid' 	=>  $invenadjustmentid,
+				':productid'	=>	$productid,
+				':quantity'     =>	$quantity
 			)
 		);
 
