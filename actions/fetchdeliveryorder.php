@@ -71,7 +71,7 @@ $output = '
         <th class="text-center" style="border: 1px solid;">Delivery Order ID</th>
         <th class="text-center" style="border: 1px solid;">Supplier Name</th>
         <th class="text-center" style="border: 1px solid;">Branch</th>
-        <th class="text-center" style="border: 1px solid;">Created By</th>
+        <th class="text-center" style="border: 1px solid;">Creator</th>
         <th class="text-center" style="border: 1px solid;">Date</th>
         <th class="text-left" style="border: 1px solid;">Total (₱)</th>
   </tr>
@@ -81,7 +81,7 @@ if($total_data > 0)
   foreach($result as $row)
   {
     $output .= '
-    <tr>
+    <tr data-id="'.$row["doid"].'">
       <td style="border: 1px solid;">'.$row["doid"].'</td>
       <td style="border: 1px solid;">'.$row["suppliername"].'</td>
       <td style="border: 1px solid;">'.$row["branchname"].'</td>

@@ -41,6 +41,7 @@ function fill_unit_select_box_branch($connect)
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>PURCHASE ORDER</title>
 		<link rel="stylesheet" href="../admin/assets/style.css">
 		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -92,7 +93,7 @@ function fill_unit_select_box_branch($connect)
     <div class="main">
 
   
-    <h3>PURCHASE ORDER</h3><br>
+    <h3 style="margin-top: 40px;">PURCHASE ORDER</h3><br>
 		<div class="container">
 			<br />
 			<div class="card">
@@ -101,7 +102,7 @@ function fill_unit_select_box_branch($connect)
 					<form method="post" id="insert_form">
 						<div class="table-repsonsive">
 							<span id="error"></span>
-							<table class="table table-bordered" id="item_table">
+							<table class="table table-bordered" id="item_table" style="max-height: 150px; overflow-y: scroll !important;">
 							<div class="float-end">
 								<label for="po_number">PO #:</label>
 								<input type="text" name="po_number" class="input-field" value="<?php echo createId('tblpurchaseorder'); ?>" readonly>
@@ -115,30 +116,32 @@ function fill_unit_select_box_branch($connect)
 								<label for="branch_id">For Branch</h5>
 								<select name="branch_id" class="p-2 col col-sm-2 form-control selectpicker branch_id" id="branch_id"><option value="">Select Supplier</option><?php echo fill_unit_select_box_branch($connect); ?></select>
 							</div>
-
+								<thead style=" display: block; ">
 								<tr>
-									<th width="15%">Product Code</th>
-									<th width="40%">Product Name</th>
-									<th>Price</th>
-									<th width="10%">Enter Quantity</th>
-									<th>Total Price</th>
+									<th width="20%">Product Code</th>
+									<th width="30%">Product Name</th>
+									<th width="15%">Price</th>
+									<th width="15%">Enter Quantity</th>
+									<th width="30%">Total Price</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
-							<footer>
-							<div class="row">
-
-								<div class="col-sm-7">
-									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
-								</div class="col-sm-5">
+								</thead>
+								<tbody id="add-row" style="display: block; height: 500px;overflow-y: auto;overflow-x: hidden;">
+							<tr>
+								
+								</tr>
+							</tbody>
+							</table>
+							<div class="col-sm-7" style="float: left">
+								<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
+							</div>
+							</div>
+							<div class="col-sm-5" style="float: right">
 									<div class="input-group mb-3">
 									  <span class="input-group-text" id="basic-addon3">Total</span>
 									  <input type="text" name="total" id="total" class="form-control total" readonly/>
 									</div>
-									
-								</div>
-							</footer>
-							</table>
-							</div>
+								</div>		
 						</div>
 					</form>
 					
@@ -154,7 +157,7 @@ $(document).ready(function(){
 	var count = 0;
 	
 	$(document).on('click', '.add', function(){
-
+		var form_data = $('#insert_form').serialize();
 		var id = $('#supplier_id').val();
 		
 		var branchid = $('#branch_id').val();
@@ -164,11 +167,11 @@ $(document).ready(function(){
 		$.ajax({
         url: "../actions/addrowpurchaseorder.php",
         method: "POST",
-        data: {id: id},
+        data: {id: id, form_data},
         success: function (data) {
             
-        	$('#item_table').append(data);
-
+        	//$('#item_table').append(data);
+        	$(data).insertAfter($("#add-row > tr").eq(0));
 			$('.selectpicker').selectpicker('refresh');
 
             }
@@ -211,6 +214,26 @@ $(document).ready(function(){
 			count = count + 1;
 
 		});
+
+
+		//validation no duplicate product allowed
+
+		$('.item_id').each(function(){
+			var	itemid1 = $(this).val();
+
+			$('.item_id').each(function(){
+			var itemid2 = $(this).val();
+
+				if (itemid1 == itemid2) {
+					error = "<li>Duplicate products not allowed</li>";
+					return false;
+				}
+
+			});
+
+		});
+
+		//end of validation
 
 		count = 1;
 
@@ -298,7 +321,7 @@ $(document).ready(function(){
 $(document).ready(function(){
   
 	$(document).on("change", ".item_id", function  () {
-        //computeTotal();
+        
         var dataType = 2;
         var currentRow = $(this).closest("tr");
         var productid = $(this).val();
