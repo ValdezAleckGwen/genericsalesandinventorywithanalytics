@@ -43,14 +43,14 @@ if(isset($_POST["item_id"]))
 		$statement  = $connect->prepare($query);
 		$id = createId('tblstocktransferitem'); //incrementing sales item id
 		$inventoryid = $_POST["item_id"][$count];
-		$item_quantity = $_POST["item_quantity"][$count];
+		$quantity = $_POST["item_quantity"][$count];
 
 		
 		$statement->execute(
 			array(
-				':id'	=>	$id,
+				':id'				=>	$id,
 				':inventoryid'		=>	$inventoryid,
-				':quantity'		=>	$quantity,
+				':quantity'			=>	$quantity,
 			)
 		);
 
@@ -128,7 +128,7 @@ if(isset($_POST["item_id"]))
 		for($count = 0; $count < count($_POST["item_id"]); $count++)
 	{
 		//get supplier id
-		$query = "SELECT tblinventory.supplierid AS supplierid WHERE tblinventory.id = :inventoryid";
+		$query = "SELECT tblinventory.supplierid AS supplierid FROM tblinventory WHERE tblinventory.id = :inventoryid";
 
 		$statement  = $connect->prepare($query);
 
@@ -206,7 +206,7 @@ if(isset($_POST["item_id"]))
 
 		} else { //if there is inventory
 			$query = "
-			UPDATE tblinventory SET quantity = :quantity WHERE tblinventory.branchid = :branchid AND tblinventory.productid = :productid
+			UPDATE tblinventory SET quantity = :quantity WHERE tblinventory.branchid = :branchid AND tblinventory.productid = :productid AND tblinventory.supplierid = :supplierid
 			";
 		}
 
