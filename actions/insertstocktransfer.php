@@ -171,7 +171,7 @@ if(isset($_POST["item_id"]))
 
 		$itemquantity = $_POST["item_quantity"][$count];
 		$itemavailable  =$_POST["item_available"][$count];
-
+		$quantity  = 0;
 		$quantity = $itemavailable - $itemquantity;
 		if ($quantity < 0 ) {
 			$quantity = $itemavailable;
@@ -179,7 +179,7 @@ if(isset($_POST["item_id"]))
 			$quantity = $itemquantity;
 		}
 
-		$quantity  = 0;
+		
 
 		if (empty($result)) { //if no inventory
 			//create a inventory for the branch
