@@ -121,10 +121,10 @@ function fill_unit_select_box_branch($connect)
 									<th width="15%">Item ID</th>
 									<th width="15%">PO ID</th>
 									<th width="15%">Product Code</th>
-									<th width="30%">Product Name</th>
+									<th width="18%">Product Name</th>
 									<th width="10%">Price</th>
-									<th width="5%">Quantity</th>
-									<th width="10%">Total Price</th>
+									<th width="15.4%">Quantity</th>
+									<th width="14%">Total Price</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
 								</thead>
@@ -135,23 +135,20 @@ function fill_unit_select_box_branch($connect)
 							</tbody>
 							<footer>
 							<div class="row">
-
-								<div class="col-sm-5">
-									<div class="input-group mb-3">
-									  <span class="input-group-text" id="basic-addon3">Total</span>
-									  <input type="text" name="total" id="total" class="form-control total" readonly/>
-									</div>
-								</div>
-							</div>
 							
 							</footer>
 							
 							</table>
-								
-							</div>
-								<div class="col-sm-6">
+								<div class="col-sm-6" style="float: left">
 									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
 								</div>
+								<div class="col-sm-5" style="float: right">
+									<div class="input-group mb-3">
+									  <span class="input-group-text" id="basic-addon3">Total</span>
+									  <input type="text" name="total" id="total" class="form-control total" readonly/>
+									</div>
+								</div>					
+							</div>
 						</div>
 					</form>
 				</div>

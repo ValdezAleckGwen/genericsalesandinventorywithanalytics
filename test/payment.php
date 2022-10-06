@@ -113,21 +113,19 @@ function fill_unit_select_box_supplier($connect)
 								
 								</tr>
 							</tbody>
-							<footer>
-							<div class="row">
-								<div class="col-sm-5">
+							<footer>						
+							</footer>
+							</table>
+								<div class="col-sm-6" style="float: left">
+									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
+								</div>
+								<div class="col-sm-5" style="float: right">
 									<div class="input-group mb-3">
 									  <span class="input-group-text" id="basic-addon3">Total</span>
 									  <input type="text" name="total" id="total" class="form-control total" readonly/>
 									</div>
-								</div>
-									
-								</div>							
-							</footer>
-							</table>
-								<div class="col-sm-6">
-									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
-								</div>								</div>
+								</div>					
+							</div>
 
 						</div>
 					</form>
