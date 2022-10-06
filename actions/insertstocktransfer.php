@@ -11,8 +11,6 @@ if(isset($_POST["item_id"]))
 	$stocktransferid = createId('tblstocktransfer');
 	$sourcebranch = $_POST['source_branch'];
 	$destinationbranch = $_POST['destination_branch'];
-
-
 	$audit = 'A-0000001';
 
 	// create a sale
@@ -38,26 +36,21 @@ if(isset($_POST["item_id"]))
 	{
 
 		$query = "
-		INSERT INTO tblsalesitem 
-        (id, salesid, productid, price, quantity, total) 
-        VALUES (:salesitemid, :salesid, :item_id, :item_price, :item_quantity, :item_total)
+		INSERT INTO tblstocktransferitem (id, inventoryid, quantity) 
+        VALUES (:id, :inventoryid, :quantity)
 		";
 
-		$salesitemid = createId('tblsalesitem'); //incrementing sales item id
-		$price = preg_replace('/[^0-9]/s', "",$_POST["item_price"][$count]);
-		$totalprice = preg_replace('/[^0-9]/s', "",$_POST["item_total"][$count]);
-		$item_id = $_POST["item_id"][$count];
+		$statement  = $connect->prepare($query);
+		$id = createId('tblstocktransferitem'); //incrementing sales item id
+		$inventoryid = $_POST["item_id"][$count];
 		$item_quantity = $_POST["item_quantity"][$count];
-		$statement = $connect->prepare($query);
+
 		
 		$statement->execute(
 			array(
-				':salesitemid'	=>	$salesitemid,
-				':salesid'		=>	$salesid,
-				':item_id'		=>	$item_id,
-				':item_price'	=>	$price,
-				':item_quantity'=>	$item_quantity,
-				':item_total'	=>	$totalprice
+				':id'	=>	$id,
+				':inventoryid'		=>	$inventoryid,
+				':quantity'		=>	$quantity,
 			)
 		);
 
@@ -66,6 +59,174 @@ if(isset($_POST["item_id"]))
 	$result = $statement->fetchAll();
 	
 	//either add to inventory or create new inventory
+
+		for($count = 0; $count < count($_POST["item_id"]); $count++)
+	{
+
+		$query = "
+		UPDATE tblinventory SET quantity = :quantity WHERE tblinventory.id = :id
+		";
+
+		$statement  = $connect->prepare($query);
+		
+		$inventoryid = $_POST["item_id"][$count];
+		$itemquantity = $_POST["item_quantity"][$count];
+		$itemavailable  =$_POST["item_available"][$count];
+
+		$quantity = 0;
+		$quantity = $itemavailable - $itemquantity;
+		if ($quantity < 0) {
+			$quantity = 0;
+		}
+
+		
+		$statement->execute(
+			array(
+				':id'	=>	$inventoryid,
+				':quantity'		=>	$quantity,
+			)
+		);
+
+	}
+
+	$result = $statement->fetchAll();
+
+	//remove the item in the source branch
+
+		for($count = 0; $count < count($_POST["item_id"]); $count++)
+	{
+
+		$query = "
+		UPDATE tblinventory SET quantity = :quantity WHERE tblinventory.id = :id
+		";
+
+		$statement  = $connect->prepare($query);
+		$inventoryid = $_POST["item_id"][$count];
+		$itemquantity = $_POST["item_quantity"][$count];
+		$itemavailable  =$_POST["item_available"][$count];
+
+		$quantity = 0;
+		$quantity = $itemavailable - $itemquantity;
+		if ($quantity < 0) {
+			$quantity = 0;
+		}
+
+		
+		$statement->execute(
+			array(
+				':id'	=>	$inventoryid,
+				':quantity'		=>	$quantity,
+			)
+		);
+
+	}
+
+	$result = $statement->fetchAll();
+
+	//add item to the destination branch
+
+		for($count = 0; $count < count($_POST["item_id"]); $count++)
+	{
+		//get supplier id
+		$query = "SELECT tblinventory.supplierid AS supplierid WHERE tblinventory.id = :inventoryid";
+
+		$statement  = $connect->prepare($query);
+
+		$inventoryid = $_POST['item_id'][$count];
+
+		$statement->execute(
+			array(
+				':inventoryid'	=>	$inventoryid,
+	
+			)
+		);
+
+		$result = $statement->fetchAll(); //run the sql for supplier id
+		$supplierid = '';
+		foreach ($result as  $result) {
+			$supplierid = $result['supplierid'];
+		}
+
+		//check if there is an inventory or not in that branch 
+
+		$query = "
+		SELECT tblinventory.id AS inventory FROM tblinventory WHERE tblinventory.branchid = :branchid AND tblinventory.productid =:productid
+		";
+
+		$statement  = $connect->prepare($query);
+		$productid = $_POST["item_code"][$count]; 
+
+		
+		$statement->execute(
+			array(
+				':branchid'			=>	$destinationbranch, //destination branch is already declared in line 13 all goods 
+				':productid'		=>	$productid
+			)
+		);
+
+
+
+
+		$result = $statement->fetchAll(); //run the sql for getting the inventory avaialble
+
+		$itemquantity = $_POST["item_quantity"][$count];
+		$itemavailable  =$_POST["item_available"][$count];
+
+		$quantity = $itemavailable - $itemquantity;
+		if ($quantity < 0 ) {
+			$quantity = $itemavailable;
+		} else {
+			$quantity = $itemquantity;
+		}
+
+		$quantity  = 0;
+
+		if (empty($result)) { //if no inventory
+			//create a inventory for the branch
+			$query = "
+			INSERT INTO tblinventory (id, productid, supplierid, branchid, quantity) VALUES (:id, :productid, :supplierid, :branchid, :quantity);
+			";
+
+		$statement  = $connect->prepare($query);
+		$createdinventoryid = createId('tblinventory');
+		$productid = $_POST['item_code'][$count];
+
+
+		$statement->execute(
+			array(
+				':id'	        =>	$createdinventoryid,
+				':productid'	=>	$productid,
+				':supplierid'	=>	$supplierid, //supplier id is already declared in 147
+				':branchid'		=>	$destinationbranch, //destination branch is already declared in line 13
+				':quantity'		=>  $quantity // declared at line 175-179
+			)
+		);
+
+
+
+		} else { //if there is inventory
+			$query = "
+			UPDATE tblinventory SET quantity = :quantity WHERE tblinventory.branchid = :branchid AND tblinventory.productid = :productid
+			";
+		}
+
+		$statement  = $connect->prepare($query);
+		$productid = $_POST['item_code'][$count];
+
+
+		$statement->execute(
+			array(
+				':productid'	=>	$productid,
+				':supplierid'	=>	$supplierid, //supplier id is already declared in 147
+				':branchid'		=>	$destinationbranch, //destination branch is already declared in line 13
+				':quantity'		=>  $quantity // declared at line 175-179
+			)
+		);
+
+
+	}
+
+	
 	
 
 	if(isset($result))
