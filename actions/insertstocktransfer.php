@@ -226,7 +226,7 @@ if(isset($_POST["item_id"]))
 
 	}
 
-	
+	$result = $statement->fetchAll();
 	
 
 	if(isset($result))
