@@ -95,7 +95,12 @@ function fill_unit_select_box_supplier($connect)
 								<select name="supplier_id" class="p-2 col col-sm-2 form-control selectpicker supplier_id" id="supplier_id"><option value="">Select Supplier</option><?php echo fill_unit_select_box_supplier($connect); ?></select>
 							</div>
 							<!--remove this if cookie is configured-->
+<<<<<<< Updated upstream
 
+=======
+							<table class="table table-bordered" id="item_table" style="max-height: 150px; overflow-y: scroll !important;">
+								<thead style=" display: block;">
+>>>>>>> Stashed changes
 								<tr>
 									<th width="15%">Item ID</th>
 									<th width="15%">DO ID</th>
@@ -121,7 +126,15 @@ function fill_unit_select_box_supplier($connect)
 								</div>
 							</footer>
 							</table>
+<<<<<<< Updated upstream
 							</div>
+=======
+								<div class="col-sm-6">
+									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
+								</div>
+							</div>
+
+>>>>>>> Stashed changes
 						</div>
 					</form>
 					
