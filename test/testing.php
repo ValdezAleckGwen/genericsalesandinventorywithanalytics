@@ -1,155 +1,30 @@
 <?php
 	
-require_once '../actions/DbConnect.php';
+require_once '../actions/database_connection.php';
 
-$datatype = 5;
-$inventoryid = 'I-0000029';
-$id = 'I-0000002';
-	
-	switch ($datatype) {
-		case 1:
-			
-			if ($inventoryid != 0) {
-				$db = new DbConnect;
-				$conn = $db->connect();
-					
-				$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblinventory.quantity AS count, tblproducts.id AS product, tblproducts.name AS name, tblproducts.markupPrice AS price FROM tblinventory INNER JOIN tblproducts ON tblinventory.productId=tblproducts.id WHERE tblproducts.id = :inventoryid");
-				$stmt->execute([':inventoryid' => $inventoryid]);
-				$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				
-				foreach ($products as $product) {
-					$data['name'] = $product['name'];
-					$data['price'] = number_format($product['price']);
-				}
+		$query = "
+		SELECT tblinventory.id AS inventory FROM tblinventory WHERE tblinventory.productid = :productid
+		";
+		$statement  = $connect->prepare($query);
+		//incrementing sales item id
+		$productid = 'P-00000';
 
-				
-				echo json_encode($data);
-			} else {
-				echo " ";
-			}	
-
-			break;
 		
-		case 2:
-			
-			if ($inventoryid != 0) {
-				$db = new DbConnect;
-				$conn = $db->connect();
-					
-				$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblinventory.quantity AS count, tblproducts.id AS product, tblproducts.name AS name, tblproducts.price AS price FROM tblinventory INNER JOIN tblproducts ON tblinventory.productId=tblproducts.id WHERE tblproducts.id = :inventoryid");
-				$stmt->execute([':inventoryid' => $inventoryid]);
-				$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				
-				foreach ($products as $product) {
-					$data['name'] = $product['name'];
-					$data['price'] = number_format($product['price']);
-				}
+		$statement->execute(
+			array(
+				':productid'	=>	$productid,
 
-				
-				echo json_encode($data);
-			} else {
-				echo " ";
-			}	
-
-			break;
-
-		case 3:
-		
-			if ($poitemid != 0) {
-				$db = new DbConnect;
-				$conn = $db->connect();
-					
-				$stmt = $conn->prepare("SELECT tblpurchaseorderitem.id as poitemid, tblpurchaseorderitem.productid as productid, tblpurchaseorderitem.poid as poid, tblpurchaseorderitem.total AS total, tblpurchaseorderitem.price AS price,tblpurchaseorderitem.quantity as quantity, tblproducts.name AS name FROM tblpurchaseorderitem INNER JOIN tblproducts ON tblpurchaseorderitem.productid=tblproducts.id where tblpurchaseorderitem.id = :poitemid;");
-				$stmt->execute([':poitemid' => $poitemid]);
-				$pos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				
-				foreach ($pos as $po) {
-					
-					$data['productid'] = $po['productid'];
-					$data['poid'] = $po['poid'];
-					$data['total'] = number_format($po['total']);
-					$data['price'] = number_format($po['price']);
-					$data['quantity'] = $po['quantity'];
-					$data['name'] = $po['name'];
-					
-				}
-
-				
-				echo json_encode($data);
-
-			} else {
-				echo " ";
-			}	
-
-			break;
-
-		case 4:
-		
-			if ($id != 0) {
-				$db = new DbConnect;
-				$conn = $db->connect();
-					
-				$stmt = $conn->prepare("SELECT tbldeliveryorderitem.id AS doitemid, tbldeliveryorderitem.branchid AS branch, tbldeliveryorderitem.productid AS productid, tblproducts.name AS productname, tbldeliveryorderitem.quantity as quantity, tbldeliveryorderitem.price as price, tbldeliveryorderitem.total AS total, tbldeliveryorder.id AS doid, tbldeliveryorder.supplierid AS supplierid FROM tbldeliveryorderitem INNER JOIN tbldeliveryorder ON tbldeliveryorderitem.doid=tbldeliveryorder.id INNER JOIN tblsupplier ON tbldeliveryorder.supplierid=tblsupplier.id INNER JOIN tblproducts ON tbldeliveryorderitem.productid=tblproducts.id WHERE paid = 0 AND tbldeliveryorderitem.id = :id;");
-				$stmt->execute([':id' => $id]);
-				$dos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				
-				foreach ($dos as $do) {
-					
-					$data['productid'] = $do['productid'];
-					$data['doid'] = $do['doid'];
-					$data['branch'] = $do['branch'];
-					$data['total'] = number_format($do['total']);
-					$data['price'] = number_format($do['price']);
-					$data['quantity'] = $do['quantity'];
-					$data['name'] = $do['productname'];
-					
-				}
-
-				
-				echo json_encode($data);
-
-			} else {
-				echo " ";
-			}	
-
-			break;
-
-		case 5:
-			
-				if ($inventoryid != 0) {
-					$db = new DbConnect;
-					$conn = $db->connect();
-						
-					$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblinventory.quantity AS count, tblproducts.id AS product, tblproducts.name AS name, tblinventory.quantity AS quantity FROM tblinventory INNER JOIN tblproducts ON tblinventory.productid=tblproducts.id WHERE tblinventory.id = :inventoryid");
-					$stmt->execute([':inventoryid' => $inventoryid]);
-					$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-					
-					foreach ($products as $product) {
-						$data['name'] = $product['name'];
-						$data['quantity'] = $product['quantity'];
-					}
-
-					
-					echo json_encode($data);
-					
-				} else {
-					echo "sadness";
-				}	
-
-			break;
+			)
+		);
 
 
+		$result = $statement->fetchAll();
 
-		default:
-			// code...
-			break;
-	}
-
-
-	
-
-echo var_dump($data);
-
+		if (empty($result)) {
+			echo "shing";
+		} else {
+			echo "shong";
+		}
 
 
 

@@ -71,6 +71,9 @@
 			case 'tblstocktransfer':
 				$index = "ST-";
 				break;
+			case 'tblstocktransfer':
+				$index = "STI-";
+				break;
 			default:
 				$index = "";
 				break;

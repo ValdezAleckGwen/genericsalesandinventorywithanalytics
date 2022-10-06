@@ -260,6 +260,7 @@ $(document).ready(function(){
 						alert("ERROR");
 
 					} else {
+						alert(data);
 						$('#item_table').find('tr:gt(0)').remove();
 
 						$('#error').html('<div class="alert alert-success">Item Details Saved</div>');
