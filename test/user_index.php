@@ -1,3 +1,26 @@
+<?php
+    
+//index.php 
+include '../actions/adddata.php';
+include '../actions/database_connection.php';
+
+
+function fill_unit_select_box_branch($connect)
+{
+    $output = '';
+
+    $query = "SELECT id AS branchid, name AS branchname from tblbranch WHERE active = 1";
+
+    $result = $connect->query($query);
+
+    foreach($result as $row)
+    {
+        $output .= '<option value="'.$row["branchid"].'">'.$row["branchname"] . '</option>';
+    }
+
+    return $output;
+}   
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -146,8 +169,8 @@
        <div class="table-title">
         <h3>USERS</h3>
           <div style="display: inline;">
-                        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#studentAddModal">
-                            Add Student
+                        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#userAddModal">
+                            Add User
                         </button>
             <button type="button" class="btn btn-success" style="font-size: 16px; font-weight: 700;"><i class="fa-regular fa-circle-check"></i> Save</button>
           </div>
@@ -166,21 +189,21 @@
 </div>
 
 
-<div class="modal fade" id="studentAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="userAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Add Student</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form id="saveStudent">
+        <form id="saveUser">
             <div class="modal-body">
 
                 <div id="errorMessage" class="alert alert-warning d-none"></div>
 
                 <div class="mb-3">
                     <label for="">ID</label>
-                    <input type="text" name="id" class="form-control" />
+                    <input type="text" name="id" class="form-control" value="<?php echo createId('tblusers');?>" readonly/>
                 </div>
 
                 <div class="mb-3">
@@ -197,26 +220,23 @@
                     <label for="">EMAIL ADDRESS</label>
                     <input type="text" name="email" class="form-control" />
                 </div>
-
                 <div class="mb-3">
-                    <label for="">PASSWORD</label>
-                    <input type="text" name="password" class="form-control" />
+                <label for="permission">Permission</h5>
+                <select name="permission" class="form-control permission" id="permission"><option value="">Select Permission</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Cashier</option>
+                    <option value="3">Stock Manager</option></select>
                 </div>
 
                 <div class="mb-3">
-                    <label for="">PERMISSION</label>
-                    <input type="text" name="permission" class="form-control" />
-                </div>
-
-                <div class="mb-3">
-                    <label for="">BRANCH</label>
-                    <input type="text" name="branch" class="form-control" />
+                <label for="branch_id">For Branch</h5>
+                <select name="branch" class="form-control branch" id="branch"><option value="">Select Branch</option><?php echo fill_unit_select_box_branch($connect); ?></select>
                 </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save Student</button>
+                <button type="submit" class="btn btn-primary">Save User</button>
             </div>
         </form>
         </div>
@@ -257,7 +277,7 @@
 
   });
 
-          $(document).on('submit', '#saveStudent', function (e) {
+          $(document).on('submit', '#saveUser', function (e) {
             e.preventDefault();
 
             var formData = new FormData(this);
@@ -265,13 +285,14 @@
 
             $.ajax({
                 type: "POST",
-                url: "../actions/adduser.php",
+                url: "../actions/insertuser.php",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
                     
                     var res = jQuery.parseJSON(response);
+                    
                     if(res.status == 422) {
                         $('#errorMessage').removeClass('d-none');
                         $('#errorMessage').text(res.message);
@@ -279,8 +300,8 @@
                     }else if(res.status == 200){
 
                         $('#errorMessage').addClass('d-none');
-                        $('#studentAddModal').modal('hide');
-                        $('#saveStudent')[0].reset();
+                        $('#userAddModal').modal('hide');
+                        $('#saveUser')[0].reset();
 
                         alertify.set('notifier','position', 'top-right');
                         alertify.success(res.message);
@@ -288,7 +309,11 @@
                         $('#myTable').load(location.href + " #myTable");
 
                     }else if(res.status == 500) {
-                        alert(res.message);
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    } else if (res.status == 69) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
                     }
                 }
             });
