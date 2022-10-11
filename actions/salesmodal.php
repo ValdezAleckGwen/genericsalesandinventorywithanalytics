@@ -135,8 +135,12 @@ $sales = $statement->fetchAll();
                                 </tbody>
                                 <tfoot>
 
-                                    <tr> 
-                                        <td colspan="3" class="text-end ps-4">
+                                    <tr>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td class="text-end ps-4">
                                             VATABLE AMOUNT
                                         </td>
                                         <td class="bg-light border">
@@ -144,7 +148,9 @@ $sales = $statement->fetchAll();
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" class="text-end ps-4">
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-end ps-4">
                                             VAT
                                         </td>
                                         <td class="border">

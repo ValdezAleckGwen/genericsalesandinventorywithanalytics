@@ -141,9 +141,9 @@ if(isset($_POST["item_id"]))
 			)
 		);
 
-		$result = $statement->fetchAll(); //run the sql for supplier id
+		$results = $statement->fetchAll(); //run the sql for supplier id
 		$supplierid = '';
-		foreach ($result as  $result) {
+		foreach ($results as  $result) {
 			$supplierid = $result['supplierid'];
 		}
 
@@ -171,7 +171,7 @@ if(isset($_POST["item_id"]))
 
 		$itemquantity = $_POST["item_quantity"][$count];
 		$itemavailable  =$_POST["item_available"][$count];
-
+		$quantity  = 0;
 		$quantity = $itemavailable - $itemquantity;
 		if ($quantity < 0 ) {
 			$quantity = $itemavailable;
@@ -179,7 +179,7 @@ if(isset($_POST["item_id"]))
 			$quantity = $itemquantity;
 		}
 
-		$quantity  = 0;
+		
 
 		if (empty($result)) { //if no inventory
 			//create a inventory for the branch
@@ -205,13 +205,38 @@ if(isset($_POST["item_id"]))
 
 
 		} else { //if there is inventory
-			$query = "
-			UPDATE tblinventory SET quantity = :quantity WHERE tblinventory.branchid = :branchid AND tblinventory.productid = :productid AND tblinventory.supplierid = :supplierid
-			";
-		}
+		// get quantity first
+		$productid = $_POST['item_code'][$count];
+		$query = "
+		SELECT tblinventory.quantity AS quantity FROM tblinventory WHERE tblinventory.branchid = :branchid AND tblinventory.productid = :productid AND tblinventory.supplierid = :supplierid
+		";
+		
 
 		$statement  = $connect->prepare($query);
-		$productid = $_POST['item_code'][$count];
+		$statement->execute(
+			array(
+				':productid'	=>	$productid,
+				':supplierid'	=>	$supplierid, //supplier id is already declared in 147
+				':branchid'		=>	$destinationbranch, //destination branch is already declared in line 13
+				':quantity'		=>  $quantity // declared at line 175-179
+			)
+		);
+
+		$results = $statement->fetchAll();
+
+		foreach($results as $result) {
+			$quantity += $result['quantity'];
+		}
+
+
+
+
+		$query = "
+		UPDATE tblinventory SET quantity = :quantity WHERE tblinventory.branchid = :branchid AND tblinventory.productid = :productid AND tblinventory.supplierid = :supplierid
+		";
+		
+
+		$statement  = $connect->prepare($query);
 
 
 		$statement->execute(
@@ -223,10 +248,11 @@ if(isset($_POST["item_id"]))
 			)
 		);
 
+		}
 
 	}
 
-	
+	$result = $statement->fetchAll();
 	
 
 	if(isset($result))
