@@ -7,11 +7,13 @@ if (isset($_POST['inventoryid'])) {
 		$db = new DbConnect;
 		$conn = $db->connect();
 			
-		$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblinventory.quantity AS count, tblproducts.id AS product, tblproducts.name AS name, tblproducts.markupPrice AS price FROM tblinventory INNER JOIN tblproducts ON tblinventory.productid=tblproducts.id WHERE tblinventory.id = :inventoryid");
+		$stmt = $conn->prepare("SELECT tblinventory.id AS inventory, tblinventory.quantity AS count, tblproducts.id AS product, tblproducts.name AS name, tblproducts.id AS productid FROM tblinventory INNER JOIN tblproducts ON tblinventory.productid=tblproducts.id WHERE tblinventory.id = :inventoryid");
 		$stmt->execute(['inventoryid' => $inventoryid]);
 		$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		
 		foreach ($products as $product) {
+			$data['productid'] = $product['productid'];
+			$data['quantity'] = $product['count'];
 			$data['name'] = $product['name'];
 		}
 

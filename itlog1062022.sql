@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 08, 2022 at 02:28 PM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.0.19
+-- Generation Time: Oct 06, 2022 at 05:44 PM
+-- Server version: 10.4.19-MariaDB
+-- PHP Version: 8.0.7
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -58,11 +58,11 @@ CREATE TABLE `tblaudittrail` (
 --
 
 CREATE TABLE `tblbranch` (
-  `branchId` varchar(10) NOT NULL,
+  `id` varchar(10) NOT NULL,
   `name` varchar(59) NOT NULL,
-  `branchAddress` varchar(59) NOT NULL,
-  `branchContactNumber` varchar(12) NOT NULL,
-  `auditTrailId` varchar(4) NOT NULL,
+  `branchaddress` varchar(59) NOT NULL,
+  `contactnumber` varchar(12) NOT NULL,
+  `audit` varchar(4) NOT NULL,
   `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -70,11 +70,11 @@ CREATE TABLE `tblbranch` (
 -- Dumping data for table `tblbranch`
 --
 
-INSERT INTO `tblbranch` (`branchId`, `name`, `branchAddress`, `branchContactNumber`, `auditTrailId`, `active`) VALUES
-('B-0000001', 'Taguig Branch', 'McKinley Pkwy, Taguig, 1630 Metro Manila', '+63983555723', 'AT00', 1),
+INSERT INTO `tblbranch` (`id`, `name`, `branchaddress`, `contactnumber`, `audit`, `active`) VALUES
+('B-0000001', 'Taguig Branch', 'McKinley Pkwy, Taguig, 1630 Metro Manila', '+63983555723', 'AT00', 2),
 ('B-0000002', 'Quezon City Branch', 'North Avenue, corner Epifanio de los Santos Ave, Quezon Cit', '+63910555978', 'AT00', 1),
-('B-0000003', 'Mandaluyong Branch', 'EDSA, corner Doña Julia Vargas Ave, Ortigas Center, Mandalu', '+63909555196', 'AT00', 2),
-('B-0000004', 'San Fernando Branch', 'East Wing) and, Olongapo-Gapan Road, Lagundi, Mexico, San J', '+63283555472', 'AT00', 2);
+('B-0000003', 'Mandaluyong Branch', 'EDSA, corner Doña Julia Vargas Ave, Ortigas Center, Mandalu', '+63909555196', 'AT00', 1),
+('B-0000004', 'San Fernando Branch', 'East Wing) and, Olongapo-Gapan Road, Lagundi, Mexico, San J', '+63283555472', 'AT00', 1);
 
 -- --------------------------------------------------------
 
@@ -93,10 +93,10 @@ CREATE TABLE `tblcategory` (
 --
 
 INSERT INTO `tblcategory` (`id`, `name`, `active`) VALUES
-('C-0000001', 'PC Case', 1),
-('C-0000002', 'Graphics Card', 1),
-('C-0000003', 'Laptop', 1),
-('C-0000004', 'Processors', 1),
+('C-0000001', 'PC Case', 2),
+('C-0000002', 'Graphics Card', 2),
+('C-0000003', 'Laptop', 2),
+('C-0000004', 'Processors', 2),
 ('C-0000005', 'Peripherals', 1),
 ('C-0000006', 'Memory', 1),
 ('C-0000007', 'Audio', 1),
@@ -111,14 +111,23 @@ INSERT INTO `tblcategory` (`id`, `name`, `active`) VALUES
 --
 
 CREATE TABLE `tbldeliveryorder` (
-  `deliveryReceiptId` int(254) NOT NULL,
+  `id` varchar(20) NOT NULL,
+  `supplierid` varchar(20) NOT NULL,
   `total` double NOT NULL,
-  `userId` int(254) NOT NULL,
+  `branchid` varchar(20) NOT NULL,
+  `userid` varchar(20) NOT NULL,
   `date` date NOT NULL DEFAULT current_timestamp(),
   `time` time NOT NULL DEFAULT current_timestamp(),
-  `auditTrailId` int(254) NOT NULL,
+  `auditid` varchar(20) NOT NULL,
   `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbldeliveryorder`
+--
+
+INSERT INTO `tbldeliveryorder` (`id`, `supplierid`, `total`, `branchid`, `userid`, `date`, `time`, `auditid`, `active`) VALUES
+('DO-0000001', 'S-0000003', 40000, 'B-0000004', 'U-0000001', '2022-10-03', '16:30:35', 'A-0000001', 0);
 
 -- --------------------------------------------------------
 
@@ -127,16 +136,23 @@ CREATE TABLE `tbldeliveryorder` (
 --
 
 CREATE TABLE `tbldeliveryorderitem` (
-  `deliveryOrderItemId` int(11) NOT NULL,
-  `pendingOrderId` int(254) NOT NULL,
-  `deliveryReceiptId` int(254) NOT NULL,
-  `purchaseOrderId` int(254) NOT NULL,
-  `productId` int(254) NOT NULL,
-  `total` double NOT NULL,
+  `id` varchar(20) NOT NULL,
+  `doid` varchar(20) NOT NULL,
+  `poid` varchar(20) NOT NULL,
+  `branchid` varchar(20) NOT NULL,
+  `productid` varchar(20) NOT NULL,
+  `price` double NOT NULL,
   `quantity` int(11) NOT NULL,
-  `float` int(11) NOT NULL,
-  `active` tinyint(1) NOT NULL
+  `total` int(11) NOT NULL,
+  `paid` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbldeliveryorderitem`
+--
+
+INSERT INTO `tbldeliveryorderitem` (`id`, `doid`, `poid`, `branchid`, `productid`, `price`, `quantity`, `total`, `paid`) VALUES
+('DI-0000001', 'DO-0000001', 'PO-0000002', 'B-0000004', 'P-0000054', 20000, 2, 40000, 0);
 
 -- --------------------------------------------------------
 
@@ -145,28 +161,194 @@ CREATE TABLE `tbldeliveryorderitem` (
 --
 
 CREATE TABLE `tblinventory` (
-  `inventoryId` int(254) NOT NULL,
-  `productId` int(254) NOT NULL,
-  `branchId` int(254) NOT NULL,
-  `markupPrice` double NOT NULL,
-  `stockStatus` varchar(29) NOT NULL,
-  `quantity` int(29) NOT NULL,
-  `active` tinyint(1) NOT NULL
+  `id` varchar(12) NOT NULL,
+  `productid` varchar(12) NOT NULL,
+  `supplierid` varchar(20) NOT NULL,
+  `branchid` varchar(12) NOT NULL,
+  `quantity` int(29) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblinventory`
+--
+
+INSERT INTO `tblinventory` (`id`, `productid`, `supplierid`, `branchid`, `quantity`) VALUES
+('I-0000001', 'P-0000001', 'S-0000001', 'B-0000001', 4),
+('I-0000002', 'P-0000002', 'S-0000001', 'B-0000001', 0),
+('I-0000003', 'P-0000003', 'S-0000001', 'B-0000001', 0),
+('I-0000004', 'P-0000004', 'S-0000001', 'B-0000002', 51),
+('I-0000005', 'P-0000025', 'S-0000002', 'B-0000003', 5),
+('I-0000006', 'P-0000029', 'S-0000002', 'B-0000003', 0),
+('I-0000007', 'P-0000030', 'S-0000002', 'B-0000004', 33),
+('I-0000008', 'P-0000043', 'S-0000002', 'B-0000004', 64),
+('I-0000009', 'P-0000044', 'S-0000002', 'B-0000004', 0),
+('I-0000010', 'P-0000049', 'S-0000002', 'B-0000004', 87),
+('I-0000011', 'P-0000056', 'S-0000003', 'B-0000001', 0),
+('I-0000012', 'P-0000060', 'S-0000003', 'B-0000002', 34),
+('I-0000013', 'P-0000064', 'S-0000003', 'B-0000003', 2),
+('I-0000014', 'P-0000068', 'S-0000003', 'B-0000004', 47),
+('I-0000015', 'P-0000073', 'S-0000003', 'B-0000004', 0),
+('I-0000016', 'P-0000081', 'S-0000004', 'B-0000001', 1),
+('I-0000017', 'P-0000085', 'S-0000004', 'B-0000003', 0),
+('I-0000018', 'P-0000089', 'S-0000004', 'B-0000003', 48),
+('I-0000019', 'P-0000092', 'S-0000004', 'B-0000004', 0),
+('I-0000020', 'P-0000098', 'S-0000005', 'B-0000002', 78),
+('I-0000021', 'P-0000005', 'S-0000001', 'B-0000001', 3),
+('I-0000022', 'P-0000006', 'S-0000001', 'B-0000003', 11),
+('I-0000023', 'P-0000007', 'S-0000001', 'B-0000001', 25),
+('I-0000024', 'P-0000008', 'S-0000001', 'B-0000002', 34),
+('I-0000025', 'P-0000009', 'S-0000001', 'B-0000004', 18),
+('I-0000026', 'P-0000010', 'S-0000001', 'B-0000002', 48),
+('I-0000027', 'P-0000011', 'S-0000001', 'B-0000001', 69),
+('I-0000028', 'P-0000012', 'S-0000001', 'B-0000002', 71),
+('I-0000029', 'P-0000013', 'S-0000001', 'B-0000003', 23),
+('I-0000030', 'P-0000014', 'S-0000001', 'B-0000003', 34),
+('I-0000031', 'P-0000015', 'S-0000001', 'B-0000003', 32),
+('I-0000032', 'P-0000016', 'S-0000001', 'B-0000004', 55),
+('I-0000033', 'P-0000017', 'S-0000001', 'B-0000001', 5),
+('I-0000034', 'P-0000018', 'S-0000001', 'B-0000002', 88),
+('I-0000035', 'P-0000019', 'S-0000001', 'B-0000004', 25),
+('I-0000036', 'P-0000020', 'S-0000001', 'B-0000003', 7),
+('I-0000037', 'P-0000021', 'S-0000002', 'B-0000003', 99),
+('I-0000038', 'P-0000022', 'S-0000002', 'B-0000002', 62),
+('I-0000039', 'P-0000023', 'S-0000002', 'B-0000001', 33),
+('I-0000040', 'P-0000024', 'S-0000002', 'B-0000002', 47),
+('I-0000041', 'P-0000026', 'S-0000002', 'B-0000004', 92),
+('I-0000042', 'P-0000027', 'S-0000002', 'B-0000002', 50),
+('I-0000043', 'P-0000028', 'S-0000002', 'B-0000003', 53),
+('I-0000044', 'P-0000031', 'S-0000002', 'B-0000003', 77),
+('I-0000045', 'P-0000032', 'S-0000002', 'B-0000004', 12),
+('I-0000046', 'P-0000033', 'S-0000002', 'B-0000001', 81),
+('I-0000047', 'P-0000034', 'S-0000002', 'B-0000002', 25),
+('I-0000048', 'P-0000035', 'S-0000002', 'B-0000003', 38),
+('I-0000049', 'P-0000036', 'S-0000002', 'B-0000001', 40),
+('I-0000050', 'P-0000037', 'S-0000002', 'B-0000002', 86),
+('I-0000051', 'P-0000038', 'S-0000002', 'B-0000004', 612),
+('I-0000052', 'P-0000039', 'S-0000002', 'B-0000001', 125),
+('I-0000053', 'P-0000040', 'S-0000002', 'B-0000002', 4),
+('I-0000054', 'P-0000041', 'S-0000002', 'B-0000003', 39),
+('I-0000055', 'P-0000042', 'S-0000002', 'B-0000003', 297),
+('I-0000056', 'P-0000045', 'S-0000002', 'B-0000004', 42),
+('I-0000057', 'P-0000046', 'S-0000002', 'B-0000001', 78),
+('I-0000058', 'P-0000047', 'S-0000002', 'B-0000002', 81),
+('I-0000059', 'P-0000048', 'S-0000002', 'B-0000003', 821),
+('I-0000060', 'P-0000050', 'S-0000002', 'B-0000004', 100),
+('I-0000061', 'P-0000051', 'S-0000003', 'B-0000003', 95),
+('I-0000062', 'P-0000052', 'S-0000003', 'B-0000001', 68),
+('I-0000063', 'P-0000053', 'S-0000003', 'B-0000004', 354),
+('I-0000064', 'P-0000054', 'S-0000003', 'B-0000001', 71),
+('I-0000065', 'P-0000055', 'S-0000003', 'B-0000002', 84),
+('I-0000066', 'P-0000057', 'S-0000003', 'B-0000004', 38),
+('I-0000067', 'P-0000058', 'S-0000003', 'B-0000004', 44),
+('I-0000068', 'P-0000059', 'S-0000003', 'B-0000003', 479),
+('I-0000069', 'P-0000061', 'S-0000003', 'B-0000001', 711),
+('I-0000070', 'P-0000062', 'S-0000003', 'B-0000002', 943),
+('I-0000071', 'P-0000063', 'S-0000003', 'B-0000003', 65),
+('I-0000072', 'P-0000065', 'S-0000003', 'B-0000003', 37),
+('I-0000073', 'P-0000066', 'S-0000003', 'B-0000004', 66),
+('I-0000074', 'P-0000067', 'S-0000003', 'B-0000001', 20),
+('I-0000075', 'P-0000069', 'S-0000003', 'B-0000002', 82),
+('I-0000076', 'P-0000070', 'S-0000003', 'B-0000001', 749),
+('I-0000077', 'P-0000071', 'S-0000003', 'B-0000004', 95),
+('I-0000078', 'P-0000072', 'S-0000003', 'B-0000003', 71),
+('I-0000079', 'P-0000074', 'S-0000003', 'B-0000002', 11),
+('I-0000080', 'P-0000075', 'S-0000003', 'B-0000002', 33),
+('I-0000081', 'P-0000076', 'S-0000003', 'B-0000003', 68),
+('I-0000082', 'P-0000077', 'S-0000003', 'B-0000004', 54),
+('I-0000083', 'P-0000078', 'S-0000003', 'B-0000002', 82),
+('I-0000084', 'P-0000079', 'S-0000003', 'B-0000001', 46),
+('I-0000085', 'P-0000080', 'S-0000003', 'B-0000003', 151),
+('I-0000086', 'P-0000082', 'S-0000004', 'B-0000001', 38),
+('I-0000087', 'P-0000083', 'S-0000004', 'B-0000004', 74),
+('I-0000088', 'P-0000084', 'S-0000004', 'B-0000002', 21),
+('I-0000089', 'P-0000086', 'S-0000004', 'B-0000003', 940),
+('I-0000090', 'P-0000087', 'S-0000004', 'B-0000001', 30),
+('I-0000091', 'P-0000088', 'S-0000004', 'B-0000003', 62),
+('I-0000092', 'P-0000090', 'S-0000004', 'B-0000004', 74),
+('I-0000093', 'P-0000091', 'S-0000004', 'B-0000004', 2),
+('I-0000094', 'P-0000093', 'S-0000004', 'B-0000002', 555),
+('I-0000095', 'P-0000094', 'S-0000004', 'B-0000001', 55),
+('I-0000096', 'P-0000095', 'S-0000004', 'B-0000003', 88),
+('I-0000097', 'P-0000096', 'S-0000005', 'B-0000003', 547),
+('I-0000098', 'P-0000097', 'S-0000005', 'B-0000004', 23),
+('I-0000099', 'P-0000099', 'S-0000005', 'B-0000002', 61),
+('I-0000100', 'P-0000100', 'S-0000005', 'B-0000001', 20),
+('I-0000101', 'P-0000063', 'S-0000003', 'B-0000002', 2),
+('I-0000102', 'P-0000082', 'S-0000004', 'B-0000004', 2),
+('I-0000103', 'P-0000094', 'S-0000004', 'B-0000004', 10),
+('I-0000104', 'P-0000059', 'S-0000003', 'B-0000004', 2),
+('I-0000105', 'P-0000054', 'S-0000003', 'B-0000004', 1),
+('I-0000106', 'P-0000001', 'S-0000001', 'B-0000002', 0);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tblpayableitems`
+-- Table structure for table `tblinventoryadjustment`
 --
 
-CREATE TABLE `tblpayableitems` (
-  `payableItemId` int(254) NOT NULL,
-  `payablesId` int(254) NOT NULL,
-  `deliveryReceiptId` int(254) NOT NULL,
-  `total` double NOT NULL,
-  `active` tinyint(1) NOT NULL
+CREATE TABLE `tblinventoryadjustment` (
+  `id` varchar(20) NOT NULL,
+  `branchid` varchar(20) NOT NULL,
+  `date` date NOT NULL DEFAULT current_timestamp(),
+  `auditid` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblinventoryadjustment`
+--
+
+INSERT INTO `tblinventoryadjustment` (`id`, `branchid`, `date`, `auditid`) VALUES
+('IA-0000001', 'B-0000002', '2022-10-05', 'A-0000001'),
+('IA-0000002', 'B-0000002', '2022-10-05', 'A-0000001');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblinventoryadjustmentitem`
+--
+
+CREATE TABLE `tblinventoryadjustmentitem` (
+  `id` varchar(20) NOT NULL,
+  `invadjid` varchar(20) NOT NULL,
+  `inventoryid` varchar(20) NOT NULL,
+  `productid` varchar(20) NOT NULL,
+  `quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblinventoryadjustmentitem`
+--
+
+INSERT INTO `tblinventoryadjustmentitem` (`id`, `invadjid`, `inventoryid`, `productid`, `quantity`) VALUES
+('II-0000001', 'IA-0000001', 'I-0000004', 'P-0000004', -3),
+('II-0000002', 'IA-0000002', 'I-0000004', 'P-0000004', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tblpayableitem`
+--
+
+CREATE TABLE `tblpayableitem` (
+  `id` varchar(20) NOT NULL,
+  `payableid` varchar(20) NOT NULL,
+  `doid` varchar(20) NOT NULL,
+  `supplierid` varchar(20) NOT NULL,
+  `branchid` varchar(20) NOT NULL,
+  `productid` varchar(20) NOT NULL,
+  `price` double NOT NULL,
+  `quantity` int(20) NOT NULL,
+  `total` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblpayableitem`
+--
+
+INSERT INTO `tblpayableitem` (`id`, `payableid`, `doid`, `supplierid`, `branchid`, `productid`, `price`, `quantity`, `total`) VALUES
+('PA-0000001', '', 'DO-0000002', 'S-0000003', 'B-0000002', 'P-0000063', 7350, 3, 14700),
+('PA-0000002', '', 'DO-0000015', 'S-0000004', 'B-0000004', 'P-0000082', 247900, 2, 495800),
+('PA-0000003', '', 'DO-0000015', 'S-0000004', 'B-0000004', 'P-0000094', 495, 10, 4950);
 
 -- --------------------------------------------------------
 
@@ -175,14 +357,21 @@ CREATE TABLE `tblpayableitems` (
 --
 
 CREATE TABLE `tblpayables` (
-  `payablesId` int(254) NOT NULL,
+  `id` varchar(20) NOT NULL,
   `total` double NOT NULL,
-  `userId` int(254) NOT NULL,
+  `userid` varchar(20) NOT NULL,
   `date` date NOT NULL DEFAULT current_timestamp(),
-  `time` time NOT NULL DEFAULT current_timestamp(),
-  `auditTrailId` int(254) NOT NULL,
+  `auditid` int(254) NOT NULL,
   `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblpayables`
+--
+
+INSERT INTO `tblpayables` (`id`, `total`, `userid`, `date`, `auditid`, `active`) VALUES
+('PY-0000001', 14700, 'U-0000001', '2022-10-01', 0, 1),
+('PY-0000002', 500750, 'U-0000001', '2022-10-02', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -237,11 +426,9 @@ INSERT INTO `tblproducts` (`id`, `name`, `supplier`, `category`, `price`, `marku
 ('P-0000018', 'Tecware Keyboard Wrist Pad Full 445x100x25mm', 'S-0000001', 'C-0000005', '499.00', '548.90', 1),
 ('P-0000019', 'Tecware Alpha M mATX TG Chassis White ', 'S-0000001', 'C-0000001', '2680.00', '2948.00', 1),
 ('P-0000020', 'Tecware Vega M Tempered Chassis', 'S-0000001', 'C-0000001', '1669.00', '1835.90', 1),
-('P-0000021', 'Asus B250 Mining Expert', 'S-0000002', 'C-0000009', '1999.00', '2198.9', 1),
-('P-0000022', 'Asus ROG STRIX B250F GAMING ', 'S-0000002', 'C-0000009', '5499.00', '6048.90', 1),
-('P-0000023', 'ASUS Maximus VI Hero', 'S-0000002', 'C-0000009', '7988.00', '8786.80', 1),
-('P-0000024', 'ASUS Prime H610M-E D4 Intel LGA 1700', 'S-0000002', 'C-0000009', '5560.00', '6116.00', 1),
-('P-0000025', 'Asus Prime Z690-A ATX LGA 1700 Motherboard', 'S-0000002', 'C-0000009', '15450.00', '16995.00', 1),
+('P-0000023', 'ASUS Maximus VI Hero', 'S-0000002', 'C-0000009', '7988.00', '8786.80', 2),
+('P-0000024', 'ASUS Prime H610M-E D4 Intel LGA 1700', 'S-0000002', 'C-0000009', '5560.00', '6116.00', 2),
+('P-0000025', 'Asus Prime Z690-A ATX LGA 1700 Motherboard', 'S-0000002', 'C-0000009', '15450.00', '16995.00', 2),
 ('P-0000026', 'ASUS EX-B460M-V5 Intel B460 LGA 1200 mATX Motherboard', 'S-0000002', 'C-0000009', '5150.00', '5665.00', 2),
 ('P-0000027', 'ASUS ZenBook 14 Ultra-Slim Laptop 14” FHD Display', 'S-0000002', 'C-0000003', '53183.00', '58501.30', 1),
 ('P-0000028', 'ASUS VivoBook Pro 15 OLED Ultra Slim Laptop, 15.6” FHD OLED Display', 'S-0000002', 'C-0000003', '49499.00', '54448.90', 1),
@@ -325,15 +512,23 @@ INSERT INTO `tblproducts` (`id`, `name`, `supplier`, `category`, `price`, `marku
 --
 
 CREATE TABLE `tblpurchaseorder` (
-  `purchaseOrderId` int(254) NOT NULL,
-  `supplierId` int(254) NOT NULL,
+  `id` varchar(20) NOT NULL,
+  `branchid` varchar(20) NOT NULL,
+  `supplierid` varchar(20) NOT NULL,
   `total` double NOT NULL,
-  `userId` int(254) NOT NULL,
+  `userid` varchar(20) NOT NULL,
   `date` date NOT NULL DEFAULT current_timestamp(),
   `time` time NOT NULL DEFAULT current_timestamp(),
-  `auditTrailId` int(254) NOT NULL,
-  `active` tinyint(1) NOT NULL
+  `auditid` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblpurchaseorder`
+--
+
+INSERT INTO `tblpurchaseorder` (`id`, `branchid`, `supplierid`, `total`, `userid`, `date`, `time`, `auditid`) VALUES
+('PO-0000001', 'B-0000004', 'S-0000003', 174000, 'U-0000001', '2022-10-03', '16:03:27', 'A-0000001'),
+('PO-0000002', 'B-0000004', 'S-0000003', 60000, 'U-0000001', '2022-10-03', '16:13:20', 'A-0000001');
 
 -- --------------------------------------------------------
 
@@ -342,14 +537,21 @@ CREATE TABLE `tblpurchaseorder` (
 --
 
 CREATE TABLE `tblpurchaseorderitem` (
-  `pendingOrderId` int(254) NOT NULL,
-  `purchaseOrderId` int(254) NOT NULL,
-  `productId` int(254) NOT NULL,
-  `total` double NOT NULL,
-  `quantity` double NOT NULL,
-  `floats` int(11) NOT NULL,
-  `active` tinyint(1) NOT NULL
+  `id` varchar(20) NOT NULL,
+  `poid` varchar(20) NOT NULL,
+  `productid` varchar(20) NOT NULL,
+  `branchid` varchar(20) NOT NULL,
+  `price` double NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `total` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblpurchaseorderitem`
+--
+
+INSERT INTO `tblpurchaseorderitem` (`id`, `poid`, `productid`, `branchid`, `price`, `quantity`, `total`) VALUES
+('PI-0000001', 'PO-0000002', 'P-0000054', 'B-0000004', 20000, 1, 20000);
 
 -- --------------------------------------------------------
 
@@ -358,17 +560,42 @@ CREATE TABLE `tblpurchaseorderitem` (
 --
 
 CREATE TABLE `tblsales` (
-  `salesId` varchar(2) NOT NULL,
+  `id` varchar(10) NOT NULL,
   `total` int(29) NOT NULL,
-  `taxId` int(254) NOT NULL,
+  `taxid` int(254) NOT NULL,
+  `vat` int(50) NOT NULL,
+  `vattablesale` int(50) NOT NULL,
   `pending` int(1) NOT NULL,
-  `userId` int(2) NOT NULL,
-  `branchId` varchar(2) NOT NULL,
-  `date` date NOT NULL DEFAULT current_timestamp(),
-  `time` time NOT NULL DEFAULT current_timestamp(),
-  `auditTrailId` int(254) NOT NULL,
-  `active` tinyint(1) NOT NULL
+  `userid` varchar(10) NOT NULL,
+  `branchid` varchar(10) NOT NULL,
+  `audit` varchar(10) NOT NULL,
+  `active` tinyint(1) NOT NULL,
+  `date` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblsales`
+--
+
+INSERT INTO `tblsales` (`id`, `total`, `taxid`, `vat`, `vattablesale`, `pending`, `userid`, `branchid`, `audit`, `active`, `date`) VALUES
+('S-0000001', 21373, 1, 2013, 14762, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000002', 39787, 1, 3947, 28943, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000003', 0, 1, 0, 0, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000004', 16445, 1, 1973, 14472, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000005', 3355, 1, 403, 2952, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000006', 2299, 1, 276, 2023, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000007', 16500, 1, 1980, 14520, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000008', 3355, 1, 403, 2952, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000009', 2519, 1, 302, 2217, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000010', 0, 1, 39534, 289916, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000011', 52796, 1, 6336, 46460, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000012', 5475, 1, 657, 4818, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000013', 16500, 1, 1980, 14520, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000014', 217162, 1, 1511, 11084, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000015', 73635, 1, 6534, 47916, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000016', 6897, 1, 828, 6069, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000017', 22990, 1, 2759, 20231, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03'),
+('S-0000018', 330880, 1, 10692, 78408, 1, 'U-0000001', 'B-0000001', 'A-0000001', 1, '2022-10-03');
 
 -- --------------------------------------------------------
 
@@ -377,13 +604,43 @@ CREATE TABLE `tblsales` (
 --
 
 CREATE TABLE `tblsalesitem` (
-  `salesItemId` int(254) NOT NULL,
-  `productId` int(254) NOT NULL,
-  `salesId` varchar(2) NOT NULL,
-  `quantity` int(29) NOT NULL,
-  `total` int(29) NOT NULL,
-  `active` tinyint(1) NOT NULL
+  `id` varchar(10) NOT NULL,
+  `salesid` varchar(10) NOT NULL,
+  `productid` varchar(10) NOT NULL,
+  `price` double NOT NULL,
+  `quantity` int(10) NOT NULL,
+  `total` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblsalesitem`
+--
+
+INSERT INTO `tblsalesitem` (`id`, `salesid`, `productid`, `price`, `quantity`, `total`) VALUES
+('SI-0000001', 'S-0000001', 'P-0000001', 2299, 2, 4598),
+('SI-0000002', 'S-0000001', 'P-0000002', 3355, 5, 16775),
+('SI-0000003', 'S-0000002', 'P-0000001', 2299, 3, 6897),
+('SI-0000004', 'S-0000002', 'P-0000004', 3289, 10, 32890),
+('SI-0000006', 'S-0000004', 'P-0000004', 3289, 5, 16445),
+('SI-0000007', 'S-0000005', 'P-0000002', 3355, 1, 3355),
+('SI-0000008', 'S-0000006', 'P-0000001', 2299, 1, 2299),
+('SI-0000009', 'S-0000007', 'P-0000060', 16500, 1, 16500),
+('SI-0000010', 'S-0000008', 'P-0000002', 3355, 1, 3355),
+('SI-0000011', 'S-0000009', 'P-0000003', 2519, 1, 2519),
+('SI-0000012', 'S-0000010', 'P-0000029', 65890, 5, 329450),
+('SI-0000013', 'S-0000011', 'P-0000098', 26398, 2, 52796),
+('SI-0000014', 'S-0000012', 'P-0000049', 1095, 5, 5475),
+('SI-0000015', 'S-0000013', 'P-0000060', 16500, 1, 16500),
+('SI-0000016', 'S-0000014', 'P-0000001', 2299, 3, 6897),
+('SI-0000017', 'S-0000014', 'P-0000029', 65890, 3, 197670),
+('SI-0000018', 'S-0000014', 'P-0000003', 2519, 5, 12595),
+('SI-0000019', 'S-0000015', 'P-0000025', 16995, 1, 16995),
+('SI-0000020', 'S-0000015', 'P-0000049', 1095, 2, 2190),
+('SI-0000021', 'S-0000015', 'P-0000064', 18150, 3, 54450),
+('SI-0000022', 'S-0000016', 'P-0000001', 2299, 3, 6897),
+('SI-0000023', 'S-0000017', 'P-0000001', 2299, 10, 22990),
+('SI-0000024', 'S-0000018', 'P-0000030', 120890, 2, 241780),
+('SI-0000025', 'S-0000018', 'P-0000056', 29700, 3, 89100);
 
 -- --------------------------------------------------------
 
@@ -402,44 +659,25 @@ CREATE TABLE `tblsalesreturn` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tblstockadjustment`
---
-
-CREATE TABLE `tblstockadjustment` (
-  `stockTransferId` int(254) NOT NULL,
-  `date` date NOT NULL DEFAULT current_timestamp(),
-  `time` time NOT NULL DEFAULT current_timestamp(),
-  `auditTrailId` int(254) NOT NULL,
-  `active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `tblstockadjustmentitem`
---
-
-CREATE TABLE `tblstockadjustmentitem` (
-  `stockAdjustmentId` int(254) NOT NULL,
-  `inventoryId` int(254) NOT NULL,
-  `quantity` int(29) NOT NULL,
-  `active` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `tblstocktransfer`
 --
 
 CREATE TABLE `tblstocktransfer` (
-  `stockTransferId` int(254) NOT NULL,
-  `branchIdFrom` int(254) NOT NULL,
-  `branchIdTo` int(254) NOT NULL,
-  `time` time NOT NULL DEFAULT current_timestamp(),
-  `auditTrailId` int(254) NOT NULL,
-  `active` tinyint(1) NOT NULL
+  `id` varchar(20) NOT NULL,
+  `source` varchar(20) NOT NULL,
+  `destination` varchar(20) NOT NULL,
+  `auditid` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblstocktransfer`
+--
+
+INSERT INTO `tblstocktransfer` (`id`, `source`, `destination`, `auditid`) VALUES
+('ST-0000001', 'B-0000001', 'B-0000002', 'A-0000001'),
+('ST-0000002', 'B-0000001', 'B-0000002', 'A-0000001'),
+('ST-0000003', 'B-0000001', 'B-0000002', 'A-0000001'),
+('ST-0000004', 'B-0000001', 'B-0000002', 'A-0000001');
 
 -- --------------------------------------------------------
 
@@ -448,11 +686,19 @@ CREATE TABLE `tblstocktransfer` (
 --
 
 CREATE TABLE `tblstocktransferitem` (
-  `stockTransferId` int(254) NOT NULL,
-  `inventoryId` int(254) NOT NULL,
-  `quantity` int(29) NOT NULL,
-  `active` tinyint(1) NOT NULL
+  `id` varchar(20) NOT NULL,
+  `inventoryid` varchar(20) NOT NULL,
+  `quantity` int(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tblstocktransferitem`
+--
+
+INSERT INTO `tblstocktransferitem` (`id`, `inventoryid`, `quantity`) VALUES
+('0000001', 'I-0000001', 5),
+('0000002', 'I-0000001', 2),
+('0000003', 'I-0000001', 2);
 
 -- --------------------------------------------------------
 
@@ -474,8 +720,8 @@ CREATE TABLE `tblsupplier` (
 --
 
 INSERT INTO `tblsupplier` (`id`, `name`, `contactNumber`, `emailAddress`, `address`, `active`) VALUES
-('S-0000001\r\n', 'Tecware', '+63 9215557167', 'tecware@gmail.com', '#22 Josefa Bldg. San Vicente Centro Urdaneta Pangasinan 2428 Urdaneta', 1),
-('S-0000002', 'Asus', '+63 9195556353', 'asus@gmail.com', 'Hanston Building, Emerald Ave, Ortigas Center, Pasig, 1605 Metro Mani', 1),
+('S-0000001', 'Tecware', '+63 9215557167', 'tecware@gmail.com', '#22 Josefa Bldg. San Vicente Centro Urdaneta Pangasinan 2428 Urdaneta', 2),
+('S-0000002', 'Asus', '+63 9195556353', 'asus@gmail.com', 'Hanston Building, Emerald Ave, Ortigas Center, Pasig, 1605 Metro Mani', 2),
 ('S-0000003', 'Gigabyte', '+63 8905550672', 'gigabyte@yahoo.com', '4448 Calatagan St, Makati, 1235 Metro Manila', 1),
 ('S-0000004', 'MSI ', '+63 9235557389', 'msi@yahoo.com', '4/F, The Annex, SM City North EDSA, 173, Sto. Cristo St, Quezon City,', 1),
 ('S-0000005', 'Galax', '+63 9857412568', 'galax@gmail.com', 'McKinley Pkwy, Taguig, 1630 Metro Manila', 1);
@@ -500,13 +746,13 @@ CREATE TABLE `tbltax` (
 --
 
 CREATE TABLE `tblusers` (
-  `id` int(255) NOT NULL,
+  `id` varchar(20) NOT NULL,
   `firstName` varchar(99) NOT NULL,
   `lastName` varchar(99) NOT NULL,
   `emailAddress` varchar(99) NOT NULL,
   `password` varchar(50) NOT NULL,
   `permission` int(1) NOT NULL,
-  `branchId` varchar(2) NOT NULL,
+  `branchId` varchar(10) NOT NULL,
   `active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -515,11 +761,11 @@ CREATE TABLE `tblusers` (
 --
 
 INSERT INTO `tblusers` (`id`, `firstName`, `lastName`, `emailAddress`, `password`, `permission`, `branchId`, `active`) VALUES
-(1, 'Jeremy', 'Langcay', 'langcayjeremy@gmail.com', 'jeremy', 1, '1', 1),
-(2, 'Richmonde', 'Toledo', 'richtoledo@gmail.com', 'richmonde', 2, '2', 2),
-(3, 'Aleck', 'Valdez', 'aleckvaldez@gmail.com', 'aleck', 1, '1', 1),
-(4, 'Ray Allen', 'Santos', 'raysantos@gmail.com', 'allen', 2, '2', 1),
-(5, 'Kim Joshua', 'Quiambao', 'kimquiambao@gmail.com', 'josh', 3, '4', 1);
+('U-0000001', 'Jose', 'Dela Cruz', 'josedelacruz@gmail.com', 'josed', 1, '1', 2),
+('U-0000002', 'Richard', 'Talman', 'richtalman@gmail.com', 'rtalman', 2, '2', 1),
+('U-0000003', 'Alex', 'Balmores', 'alexb@gmail.com', 'alexbalmores', 1, '1', 1),
+('U-0000004', 'Rey Abel', 'Santiago', 'reyabelsantiago@gmail.com', 'rayzor', 2, '2', 1),
+('U-0000005', 'Azuki', 'Expand', 'azukiexpand@yahoo.com', 'azuki', 3, '4', 1);
 
 --
 -- Indexes for dumped tables
@@ -529,7 +775,7 @@ INSERT INTO `tblusers` (`id`, `firstName`, `lastName`, `emailAddress`, `password
 -- Indexes for table `tblbranch`
 --
 ALTER TABLE `tblbranch`
-  ADD PRIMARY KEY (`branchId`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblcategory`
@@ -541,19 +787,43 @@ ALTER TABLE `tblcategory`
 -- Indexes for table `tbldeliveryorder`
 --
 ALTER TABLE `tbldeliveryorder`
-  ADD PRIMARY KEY (`deliveryReceiptId`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbldeliveryorderitem`
+--
+ALTER TABLE `tbldeliveryorderitem`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblinventory`
 --
 ALTER TABLE `tblinventory`
-  ADD PRIMARY KEY (`inventoryId`);
+  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `tblpayableitems`
+-- Indexes for table `tblinventoryadjustment`
 --
-ALTER TABLE `tblpayableitems`
-  ADD PRIMARY KEY (`payableItemId`);
+ALTER TABLE `tblinventoryadjustment`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tblinventoryadjustmentitem`
+--
+ALTER TABLE `tblinventoryadjustmentitem`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tblpayableitem`
+--
+ALTER TABLE `tblpayableitem`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tblpayables`
+--
+ALTER TABLE `tblpayables`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblpermissions`
@@ -571,19 +841,25 @@ ALTER TABLE `tblproducts`
 -- Indexes for table `tblpurchaseorder`
 --
 ALTER TABLE `tblpurchaseorder`
-  ADD PRIMARY KEY (`purchaseOrderId`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tblpurchaseorderitem`
+--
+ALTER TABLE `tblpurchaseorderitem`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblsales`
 --
 ALTER TABLE `tblsales`
-  ADD PRIMARY KEY (`salesId`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblsalesitem`
 --
 ALTER TABLE `tblsalesitem`
-  ADD PRIMARY KEY (`salesItemId`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblsalesreturn`
@@ -592,16 +868,16 @@ ALTER TABLE `tblsalesreturn`
   ADD PRIMARY KEY (`salesReturnId`);
 
 --
--- Indexes for table `tblstockadjustment`
+-- Indexes for table `tblstocktransfer`
 --
-ALTER TABLE `tblstockadjustment`
-  ADD PRIMARY KEY (`stockTransferId`);
+ALTER TABLE `tblstocktransfer`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblstocktransferitem`
 --
 ALTER TABLE `tblstocktransferitem`
-  ADD PRIMARY KEY (`stockTransferId`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tblsupplier`
@@ -626,40 +902,10 @@ ALTER TABLE `tblusers`
 --
 
 --
--- AUTO_INCREMENT for table `tbldeliveryorder`
---
-ALTER TABLE `tbldeliveryorder`
-  MODIFY `deliveryReceiptId` int(254) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tblinventory`
---
-ALTER TABLE `tblinventory`
-  MODIFY `inventoryId` int(254) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tblpayableitems`
---
-ALTER TABLE `tblpayableitems`
-  MODIFY `payableItemId` int(254) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `tblpermissions`
 --
 ALTER TABLE `tblpermissions`
   MODIFY `id` int(254) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tblpurchaseorder`
---
-ALTER TABLE `tblpurchaseorder`
-  MODIFY `purchaseOrderId` int(254) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tblsalesitem`
---
-ALTER TABLE `tblsalesitem`
-  MODIFY `salesItemId` int(254) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tblsalesreturn`
@@ -668,28 +914,10 @@ ALTER TABLE `tblsalesreturn`
   MODIFY `salesReturnId` int(254) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `tblstockadjustment`
---
-ALTER TABLE `tblstockadjustment`
-  MODIFY `stockTransferId` int(254) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `tblstocktransferitem`
---
-ALTER TABLE `tblstocktransferitem`
-  MODIFY `stockTransferId` int(254) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `tbltax`
 --
 ALTER TABLE `tbltax`
   MODIFY `id` int(254) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `tblusers`
---
-ALTER TABLE `tblusers`
-  MODIFY `id` int(255) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

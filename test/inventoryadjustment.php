@@ -4,21 +4,7 @@
 include '../actions/adddata.php';
 include '../actions/database_connection.php';
 
-function fill_unit_select_box_supplier($connect)
-{
-	$output = '';
-
-	$query = "SELECT id AS supplierid, name AS suppliername from tblsupplier WHERE active = 1";
-
-	$result = $connect->query($query);
-
-	foreach($result as $row)
-	{
-		$output .= '<option value="'.$row["supplierid"].'">'.$row["suppliername"] . '</option>';
-	}
-
-	return $output;
-}		
+	
 
 //remove this if cookie is configured
 
@@ -41,7 +27,7 @@ function fill_unit_select_box_branch($connect)
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>DELIVERY ORDER</title>
+		<title>INVENTORY ADJUSTMENT</title>
 		<link rel="stylesheet" href="../admin/assets/style.css">
 		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -93,7 +79,7 @@ function fill_unit_select_box_branch($connect)
     <div class="main">
 
   
-    <h3 style="margin-top: 40px;">DELIVERY ORDER</h3><br>
+    <h3>INVENTORY ADJUSTMENT</h3><br>
 		<div class="container">
 			<br />
 			<div class="card">
@@ -102,57 +88,40 @@ function fill_unit_select_box_branch($connect)
 					<form method="post" id="insert_form">
 						<div class="table-repsonsive">
 							<span id="error"></span>
+							<table class="table table-bordered" id="item_table">
 							<div class="float-end">
-								<label for="po_number">PO #:</label>
-								<input type="text" name="do_number" class="input-field" value="<?php echo createId('tblpurchaseorder'); ?>" id="do_number" readonly>
+								<label for="po_number">INVENTORY ADJUSTMENT #:</label>
+								<input type="text" name="ia_number" class="input-field" value="<?php echo createId('tblinventoryadjustment'); ?>" id="ia_number" readonly>
 							</div>
-							<div class="container m-1">
-								<label for="supplier_id">Supplier</h5>
-								<select name="supplier_id" class="p-2 col col-sm-2 form-control selectpicker supplier_id" id="supplier_id"><option value="">Select Supplier</option><?php echo fill_unit_select_box_supplier($connect); ?></select>
-							</div>
+
 							<!--remove this if cookie is configured-->
 							<div class="container m-1">
 								<label for="branch_id">For Branch</h5>
-								<select name="branch_id" class="p-2 col col-sm-2 form-control selectpicker branch_id" id="branch_id"><option value="">Select Supplier</option><?php echo fill_unit_select_box_branch($connect); ?></select>
+								<select name="branch_id" class="p-2 col col-sm-2 form-control selectpicker branch_id" id="branch_id"><option value="">Select Branch</option><?php echo fill_unit_select_box_branch($connect); ?></select>
 							</div>
-							<table class="table table-bordered" id="item_table" style="max-height: 150px; overflow-y: scroll !important;">
-								<thead style=" display: block; ">
+
 								<tr>
-									<th width="15%">Item ID</th>
-									<th width="15%">PO ID</th>
-									<th width="15%">Product Code</th>
-									<th width="18%">Product Name</th>
-									<th width="10%">Price</th>
-									<th width="15.4%">Quantity</th>
-									<th width="14%">Total Price</th>
+									<th width="20%">Inventory ID</th>
+									<th width="20%">Product Code</th>
+									<th width="40%">Product Name</th>
+									<th width="10%">Available Quantity</th>
+									<th width="20%">Adjustment Quantity -</th>
+									<th width="20%">Adjustment Quantity +</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
-								</thead>
-								<tbody id="add-row" style="display: block; height: 500px;overflow-y: auto;overflow-x: hidden;">
-							<tr>
-									
-								</tr>
-							</tbody>
 							<footer>
 							<div class="row">
-							
-							</footer>
-							
-							</table>
-								<div class="col-sm-6" style="float: left">
+
+								<div class="col-sm-7">
 									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
-								</div>
-								<div class="col-sm-5" style="float: right">
-									<div class="input-group mb-3">
-									  <span class="input-group-text" id="basic-addon3">Total</span>
-									  <input type="text" name="total" id="total" class="form-control total" readonly/>
-									</div>
-								</div>					
+
+							</footer>
+							</table>
 							</div>
 						</div>
 					</form>
+					
 				</div>
-								
 			</div>
 		</div>
 	</body>
@@ -172,13 +141,15 @@ $(document).ready(function(){
 		count++;
 
 		$.ajax({
-        url: "../actions/addrowdeliveryorder.php",
+        url: "../actions/addrowinventoryadjustment.php",
         method: "POST",
         data: {id: id, branchid, branchid},
-        success: function (data) {            
-        	//$('#item_table').append(data);
-			$(data).insertAfter($("#add-row > tr").eq(0));
+        success: function (data) {
+            
+        	$('#item_table').append(data);
+
 			$('.selectpicker').selectpicker('refresh');
+
             }
         });
 
@@ -220,6 +191,7 @@ $(document).ready(function(){
 
 		});
 
+
 		count = 1;
 
 		$("select[name='item_id[]']").each(function(){
@@ -246,8 +218,7 @@ $(document).ready(function(){
 
 			$.ajax({
 
-				url:"../actions/insertdeliveryorder.php",
-				// url:"../actions/testing.php",
+				url:"../actions/insertinvenadjustment.php",
 
 				type:"POST",
 
@@ -298,121 +269,36 @@ $(document).ready(function(){
 		}
 
 	});
-	 
-});
-</script>
-<script>
-	
-	
-$(document).ready(function(){
-  
+
 	$(document).on("change", ".item_id", function  () {
 		
         
-        var dataType = 3;
+        var dataType = 5;
         var currentRow = $(this).closest("tr");
         var productid = $(this).val();
-        var poid = currentRow.find(".po_id");
         var itemid = currentRow.find(".item_code");
         var name = currentRow.find(".item_name");
-        var price = currentRow.find(".item_price");
-        var quantity = currentRow.find(".quantity")
-        var total = currentRow.find(".item_total")
-        var actualPrice;
-        
+        var quantity = currentRow.find(".item_quantity")
         $.ajax({
             url: "../actions/fetchproductinfo.php",
             method: "POST",
             data: {productid: productid, dataType: dataType},
             dataType: "JSON",
             success: function (data) {
-                actualPrice = data.price.replace(/^/, '₱');
-                poid.val(data.poid);
-                itemid.val(data.productid);
-                name.val(data.name); 
-                price.val(actualPrice);
+            	itemid.val(data.productid);
+            	name.val(data.name);
                 quantity.val(data.quantity);	
-                total.val(data.total);
+                
                 
             }
         });
         return false;
     });
-	//
-
-	$(document).on("keyup", ".item_quantity", function() {
-		// total_amount();
-		
-		var currentRow = $(this).closest("tr");
-		var quantity = $(this).val();
-		var price = currentRow.find(".item_price").val();
-		var totalPrice = currentRow.find(".item_total");
-		var tax = $('#tax').val();
-		var number;
-		var vatSale;
-		$.ajax({
-			url: "../actions/fetchtotalprice.php",
-			method: "POST",
-			data: {quantity: quantity, price:price },
-			success	: function (totalprice) {
-				totalprice = totalprice.replace(/^/, '₱ ');
-				totalPrice.val(totalprice);
-
-				// number = totalprice;
-				// number = number.replace(/[^a-zA-Z0-9]/g, '');
-				// vatSale = number * .88;
-				// number = number * .12;
-				// number = parseFloat(number).toFixed(2);
-				// vatSale = parseFloat(vatSale).toFixed(2);
-				// $('#vat').val(number);
-				// $('#vatable-sale').val(vatSale);
-
-
-			}
-		});
-
-
-	});
-
-
-	var	total_amount = function () {
-
-		var sum = 0;
-		var currency = "₱"
-		$('.item_total').each(function () {
-			var num = $(this).val().replace(/[^a-zA-Z0-9]/g, '');
-			
-			// var num = $(this).val();
-			console.log(num);
-			if(num != 0) {
-				
-				sum += parseFloat(num);
-				
-			}
-
-		});
-
-		sum = sum.toLocaleString("en-US");
-		sum = sum.replace(/^/, '₱');
-		$("#total").val(sum);
-	}
-
-	$(document).on("change", ".item_quantity", function() {
-		total_amount();
-	})
-
-	
-	
-		
-		
-
-	
 
 
 
 
+	 
 });
-
-
 
 </script>

@@ -62,6 +62,18 @@
 			case 'tblpayableitem':
 				$index = "PA-";
 				break;
+			case 'tblinventoryadjustment':
+				$index = "IA-";
+				break;
+			case 'tblinventoryadjustmentitem':
+				$index = "II-";
+				break;
+			case 'tblstocktransfer':
+				$index = "ST-";
+				break;
+			case 'tblstocktransfer':
+				$index = "STI-";
+				break;
 			default:
 				$index = "";
 				break;

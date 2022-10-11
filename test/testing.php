@@ -1,34 +1,31 @@
 <?php
-	include '../actions/adddata.php';
-	include('../actions/database_connection.php');
+	
+require_once '../actions/database_connection.php';
 
-$id = 'S-0000001';
-$query = "SELECT 
-tblsales.id AS salesid,
-tblproducts.id AS productid,
-tblproducts.name AS name,
-tblsalesitem.quantity AS quantity,
-tblsalesitem.price AS price,
-tblsales.vat AS Tax,
-tblsales.vattablesale AS VattableSale,
-tblsales.total  AS grandtotal
-FROM tblsales 
-INNER JOIN tblsalesitem
-ON tblsalesitem.salesid=tblsales.id
-INNER JOIN tblproducts
-ON tblsalesitem.productid=tblproducts.id
-WHERE tblsales.id = :id";
+		$query = "
+		SELECT tblinventory.id AS inventory FROM tblinventory WHERE tblinventory.productid = :productid
+		";
+		$statement  = $connect->prepare($query);
+		//incrementing sales item id
+		$productid = 'P-00000';
+
+		
+		$statement->execute(
+			array(
+				':productid'	=>	$productid,
+
+			)
+		);
 
 
+		$result = $statement->fetchAll();
 
-$statement  = $connect->prepare($query);
-$statement->execute([
-    ':id' => $id,
+		if (empty($result)) {
+			echo "shing";
+		} else {
+			echo "shong";
+		}
 
-]);
 
-$sales = $statement->fetchAll();
-
-echo var_dump($sales);
 
  ?>
