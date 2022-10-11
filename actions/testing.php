@@ -4,27 +4,42 @@ include('database_connection.php');
 
 
 
-	for($count = 0; $count < count($_POST["item_id"]); $count++)
-	{
+    
+$id = 'PO-0000001';
 
-	$poquantity = $_POST['po_quantity'][$count];
-	$itemquantity = $_POST['item_quantity'][$count];
+$query = "SELECT 
+tblpurchaseorder.id AS poid,
+tblsupplier.name AS suppliername,
+tblproducts.id AS productid,
+tblproducts.name AS name,
+tblpurchaseorderitem.quantity AS quantity,
+tblpurchaseorderitem.total AS total,
+tblpurchaseorderitem.price AS price,
+tblpurchaseorder.date as purchasedate,
+tblpurchaseorder.total  AS grandtotal
 
-	echo $itemquantity;
-	echo "\n";
-	echo $poquantity;
-	echo "\n";
-	$quantity = $itemquantity - $poquantity;
-	echo $quantity;
-	echo "\n";
+FROM tblpurchaseorder
+INNER JOIN tblsupplier
+ON tblpurchaseorder.supplierid=tblsupplier.id
+INNER JOIN tblpurchaseorderitem
+ON tblpurchaseorderitem.poid=tblpurchaseorder.id
+INNER JOIN tblproducts
+ON tblpurchaseorderitem.productid=tblproducts.id
 
-	
-
-	
+WHERE tblpurchaseorder.id = :id";
 
 
 
-	}
+$statement  = $connect->prepare($query);
+$statement->execute([
+    ':id' => $id,
+
+]);
+
+$purchases = $statement->fetchAll();
+echo var_dump($purchases);
+
+
 
 
 

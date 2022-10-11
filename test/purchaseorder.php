@@ -137,11 +137,11 @@ function fill_unit_select_box_branch($connect)
 							</div>
 							</div>
 							<div class="col-sm-5" style="float: right">
-									<div class="input-group mb-3">
-									  <span class="input-group-text" id="basic-addon3">Total</span>
-									  <input type="text" name="total" id="total" class="form-control total" readonly/>
-									</div>
-								</div>		
+								<div class="input-group mb-3">
+									<span class="input-group-text" id="basic-addon3">Total</span>
+									<input type="text" name="total" id="total" class="form-control total" readonly/>
+								</div>
+							</div>		
 						</div>
 					</form>
 					

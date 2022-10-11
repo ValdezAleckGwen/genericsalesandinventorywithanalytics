@@ -177,7 +177,7 @@
     //modal start
     $(document).on('click', 'tr', function() {
       var id = $(this).data('id');
-      alert(id);
+      
       
 
       $.ajax({
