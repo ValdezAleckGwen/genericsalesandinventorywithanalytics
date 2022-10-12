@@ -136,7 +136,7 @@
     </div>
 
 
-    <div class="usericon">Admin <i class="fa-regular fa-user"></i></div>  
+<!-- <div class="usericon"><?php //echo displayUser(); ?> <i class="fa-regular fa-user"></i></div> -->
 
     <div class="titlebar">
       <div class="dropdown">
