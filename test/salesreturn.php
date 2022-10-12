@@ -229,7 +229,7 @@ $(document).ready(function(){
 
 			$.ajax({
 
-				url:"../actions/insertdeliveryorder.php",
+				url:"../actions/insertsalesreturn.php",
 				// url:"../actions/testing.php",
 
 				type:"POST",
@@ -307,7 +307,6 @@ $(document).ready(function(){
             data: {productid: productid, dataType: dataType},
             dataType: "JSON",
             success: function (data) {
-
                 actualPrice = data.price.replace(/^/, '₱');
                 productcode.val(data.productid);
                 name.val(data.name); 
