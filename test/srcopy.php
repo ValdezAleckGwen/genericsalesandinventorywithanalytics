@@ -1,29 +1,33 @@
 <?php
 	
 //index.php	
-
+include '../actions/adddata.php';
 include '../actions/database_connection.php';
 
-function fill_unit_select_box($connect)
+function fill_unit_select_box_sales($connect)
 {
 	$output = '';
 
-	$query = "SELECT tblinventory.id AS inventory, tblinventory.quantity AS count, tblproducts.id AS product, tblproducts.markupPrice AS price FROM tblinventory INNER JOIN tblproducts ON tblinventory.productId=tblproducts.id";
+	$query = "SELECT id AS salesid from tblsales";
 
 	$result = $connect->query($query);
 
 	foreach($result as $row)
 	{
-		$output .= '<option value="'.$row["product"].'">'.$row["product"] . '</option>';
+		$output .= '<option value="'.$row["salesid"].'">'.$row["salesid"] . '</option>';
 	}
 
 	return $output;
-}
-		
+}		
+
+//remove this if cookie is configured
+
+	
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>SALES ADJUSTMENT</title>
 		<link rel="stylesheet" href="../admin/assets/style.css">
 		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -75,64 +79,62 @@ function fill_unit_select_box($connect)
     <div class="main">
 
   
-    <h3>POINT OF SALES</h3><br>
+    <h3 style="margin-top: 40px;">SALES ADJUSTMENT</h3><br>
 		<div class="container">
 			<br />
 			<div class="card">
 				<div class="card-header">Enter Item Details</div>
 				<div class="card-body">
-
 					<form method="post" id="insert_form">
 						<div class="table-repsonsive">
 							<span id="error"></span>
-							<table class="table table-bordered" id="item_table">
+							<div class="float-end">
+								<label for="salesreturnid">Sales #:</label>
+								<input type="text" name="salesreturnid" class="input-field" value="<?php echo createId('tblsalesreturn'); ?>" id="salesreturnid" readonly>
+							</div>
+							<div class="container m-1">
+								<label for="salesid">Sales ID</h5>
+								<select name="salesid" class="p-2 col col-sm-2 form-control selectpicker salesid" id="salesid" data-live-search="true"><option value="">Select Sales</option><?php echo fill_unit_select_box_sales($connect); ?></select>
+							</div>
+							<!--remove this if cookie is configured-->
+
+							<table class="table table-bordered" id="item_table" style="max-height: 150px; overflow-y: scroll !important;">
+								<thead style=" display: block; ">
 								<tr>
-									<th width="15%">Product Code</th>
-									<th width="40%">Product Name</th>
-									<th>Price</th>
-									<th width="10%">Available Quantity</th>
-									<th width="10%">Enter Quantity</th>
-									<th>Total Price</th>
+									<th width="23%">Sales ID</th>
+									<th width="16.3%">Product ID</th>
+									<th width="19.5%">Product Name</th>
+									<th width="10.8%">Price</th>
+									<th width="10%">Quantity</th>
+									<th width="15%">Total Price</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
+								</thead>
+								<tbody id="add-row" style="display: block; height: 500px;overflow-y: auto;overflow-x: hidden;">
+							<tr>
+									
+								</tr>
+							</tbody>
 							<footer>
 							<div class="row">
-
-								<div class="col-sm-7">
+							
+							</footer>
+							
+							</table>
+								<div class="col-sm-6" style="float: left">
 									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
 								</div>
-
-								<div class="col col-sm-2">
-									<label>Tax</label>
-									<select name="tax" id="tax" class="form-control">
-										<option value="1">Regular</option>
-										<option value="2">Discount</option>
-										<option value="3">Tax Free</option>
-									</select>
-								</div>
-
-								<div class="col col-sm-3">
-									<div class="input-group mb-3">
-									  <span class="input-group-text" id="basic-addon3">Vatable Sale</span>
-									  <input type="text" class="form-control"name="vatable-sale" id="vatable-sale" aria-describedby="basic-addon3" readonly>
-									</div>
-									<div class="input-group mb-3">
-									  <span class="input-group-text" id="basic-addon3">Vat</span>
-									  <input type="text" name="vat" id="vat" class="form-control total" readonly/>
-									</div>
+								<div class="col-sm-5" style="float: right">
 									<div class="input-group mb-3">
 									  <span class="input-group-text" id="basic-addon3">Total</span>
 									  <input type="text" name="total" id="total" class="form-control total" readonly/>
 									</div>
-									
-								</div>
-							</footer>
-							</table>
+								</div>					
 							</div>
 						</div>
 					</form>
-					
 				</div>
+								
 			</div>
 		</div>
 	</body>
@@ -141,64 +143,33 @@ function fill_unit_select_box($connect)
 
 $(document).ready(function(){
 
+
+
+
 	var count = 0;
 	
-
-	function add_input_field(count)
-	{
-		
-		
-
-		var html = '';
-		
-		html += '<tr>';
-
-		html += '<td><select name="item_id[]" class="col col-sm-2 form-control selectpicker item_id" data-live-search="true"><option value="">Select Unit</option><?php echo fill_unit_select_box($connect); ?></select></td>';
-		html += '<td><input type="text" name="item_name[]" class="col col-sm-5 form-control item_name" readonly/></td>';
-
-		html += '<td><input type="text" name="item_price[]" class="col col-sm-2 form-control item_price" readonly/></td>';
-
-		html += '<td><input type="text" name="available_quantity[]" class="col col-sm-1 form-control available_quantity" readonly/></td>';
-
-		html += '<td><input type="text" name="item_quantity[]" class="col col-sm-1 form-control item_quantity" /></td>';
-
-		html += '<td><input type="text" name="item_total[]" class="col col-sm-2 form-control item_total" readonly/></td>';
-
-
-		
-
-		
-
-		var remove_button = '';
-
-		if(count > 0)
-		{
-			remove_button = '<button type="button" name="remove" class="btn btn-danger btn-sm remove"><i class="fas fa-minus"></i></button>';
-		}
-
-		html += '<td>'+remove_button+'</td></tr>';
-
-		return html;
-
-	}
-
-	$(document).on('change','.item_id', function() {
-
-	});
-
-	$('#item_table').append(add_input_field(0));
-
-	$('.selectpicker').selectpicker('refresh');
-
 	$(document).on('click', '.add', function(){
 
+		var form_data = $('#insert_form').serialize();
+		
 		count++;
 
-		$('#item_table').append(add_input_field(count));
+		$.ajax({
+        url: "../actions/addrowsrcopy.php",
+        method: "POST",
+        data: form_data,
+        success: function (data) {            
+        	//$('#item_table').append(data);
+			$(data).insertAfter($("#add-row > tr").eq(0));
+			$('.selectpicker').selectpicker('refresh');
+            }
+        });
 
-		$('.selectpicker').selectpicker('refresh');
+
+		
 
 	});
+
 
 	$(document).on('change')
 
@@ -214,20 +185,8 @@ $(document).ready(function(){
 
 		var error = '';
 
-		count = 1;
+		
 
-		// $('.item_name').each(function(){
-
-		// 	if($(this).val() == '')
-		// 	{
-
-		// 		error += "<li>Enter Item Name at "+count+" Row</li>";
-
-		// 	}
-
-		// 	count = count + 1;
-
-		// });
 
 		count = 1;
 
@@ -261,6 +220,8 @@ $(document).ready(function(){
 
 
 
+
+
 		var form_data = $(this).serialize();
 
 		if(error == '')
@@ -268,13 +229,14 @@ $(document).ready(function(){
 
 			$.ajax({
 
-				url:"../actions/insert.php",
+				url:"../actions/insertsalesreturn.php",
+				// url:"../actions/testing.php",
 
 				type:"POST",
 
 				data:form_data,
 
-				// data:$('#insert_form').serialize(),
+				
 
 				beforeSend:function()
 	    		{
@@ -328,24 +290,30 @@ $(document).ready(function(){
 $(document).ready(function(){
   
 	$(document).on("change", ".item_id", function  () {
-        //computeTotal();
-
-        var dataType = 1;
+		
+        
+        var dataType = 6;
         var currentRow = $(this).closest("tr");
         var productid = $(this).val();
-        var price = currentRow.find(".item_price");
+        var productcode = currentRow.find(".item_code");
         var name = currentRow.find(".item_name");
-        var totalPrice = currentRow	.find();
+        var price = currentRow.find(".item_price");
+        var quantity = currentRow.find(".item_quantity");
+        var total = currentRow.find(".item_total");
         var actualPrice;
         $.ajax({
             url: "../actions/fetchproductinfo.php",
             method: "POST",
-            data: {productid: productid, dataType, dataType},
+            data: {productid: productid, dataType: dataType},
             dataType: "JSON",
             success: function (data) {
                 actualPrice = data.price.replace(/^/, '₱');
-                price.val(actualPrice);
+                productcode.val(data.productid);
                 name.val(data.name); 
+                price.val(actualPrice);
+                quantity.val(data.quantity);	
+                total.val(data.total);
+                
             }
         });
         return false;
@@ -370,14 +338,14 @@ $(document).ready(function(){
 				totalprice = totalprice.replace(/^/, '₱ ');
 				totalPrice.val(totalprice);
 
-				number = totalprice;
-				number = number.replace(/[^a-zA-Z0-9]/g, '');
-				vatSale = number * .88;
-				number = number * .12;
-				number = parseFloat(number).toFixed(2);
-				vatSale = parseFloat(vatSale).toFixed(2);
-				$('#vat').val(number);
-				$('#vatable-sale').val(vatSale);
+				// number = totalprice;
+				// number = number.replace(/[^a-zA-Z0-9]/g, '');
+				// vatSale = number * .88;
+				// number = number * .12;
+				// number = parseFloat(number).toFixed(2);
+				// vatSale = parseFloat(vatSale).toFixed(2);
+				// $('#vat').val(number);
+				// $('#vatable-sale').val(vatSale);
 
 
 			}
