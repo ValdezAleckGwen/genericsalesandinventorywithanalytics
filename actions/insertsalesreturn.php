@@ -34,8 +34,8 @@ if(isset($_POST["item_id"]))
 	{
 
 		$query = "
-		INSERT INTO tblsalesreturnitem (id, salesitemid, quantity, totalprice) 
-        VALUES (:id, :salesitemid, :quantity, :totalprice)
+		INSERT INTO tblsalesreturnitem (id, salesitemid, price, quantity, totalprice) 
+        VALUES (:id, :salesitemid, :price, :quantity, :totalprice)
 		";
 
 		$statement  = $connect->prepare($query);
@@ -50,6 +50,7 @@ if(isset($_POST["item_id"]))
 			array(
 				':id'				=>	$id,
 				':salesitemid'		=>	$salesitemid,
+				':price'            => $price,
 				':quantity'			=>	$quantity,
 				':totalprice'		=>	$totalprice
 			)
