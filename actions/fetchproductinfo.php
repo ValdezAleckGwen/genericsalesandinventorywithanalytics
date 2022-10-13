@@ -137,10 +137,40 @@ if (isset($_POST['productid'])) {
 
 			break;
 
+		case 6:
+			$salesitemid = $_POST['productid'];
+				if ($salesitemid != 0) {
+					$db = new DbConnect;
+					$conn = $db->connect();
+					
+					$query = "SELECT tblsalesitem.id AS salesitemid, tblsalesitem.productid AS productid, tblsalesitem.price AS price, tblsalesitem.quantity AS quantity, tblsalesitem.total AS total, tblproducts.name AS productname FROM tblsalesitem INNER JOIN tblproducts ON tblproducts.id=tblsalesitem.productid WHERE tblsalesitem.id = :salesitemid";
+
+					$stmt = $conn->prepare($query);
+					$stmt->execute([':salesitemid' => $salesitemid]);
+					$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+					
+					foreach ($products as $product) {
+						$data['productid'] = $product['productid'];
+						$data['name'] = $product['productname'];
+						$data['price'] = $product['price'];
+						$data['quantity'] = $product['quantity'];
+						$data['total'] = $product['total'];
+					}
+
+					
+					echo json_encode($data);
+
+					
+				} else {
+					echo "sadness";
+				}	
+
+			break;
+
 
 
 		default:
-			// code...
+			echo "no parameters attached";
 			break;
 	}
 

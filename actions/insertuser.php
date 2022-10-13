@@ -1,5 +1,5 @@
 <?php
-$connect = new PDO("mysql:host=localhost; dbname=itlog", "root", "");
+include 'database_connection.php';
 
 if(isset($_POST['save_student']))
 {
@@ -22,7 +22,7 @@ if(isset($_POST['save_student']))
     	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
     $query = "
-	INSERT INTO tblusers (id, firstname, lastname,  email, password, permission, branchid, active) VALUES (:id, :firstname, :lastname, :email, :password,  :permission, :branchid, 1)
+	INSERT INTO tblusers (id, firstName, lastName,  emailAddress, password, permission, branchid, active) VALUES (:id, :firstname, :lastname, :email, :password,  :permission, :branchid, 1)
 	";
 
 	$statement  = $connect->prepare($query);
