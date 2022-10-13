@@ -69,9 +69,9 @@ if($total_data > 0)
     $output .= '
     <tr>
       <td style="border: 1px solid;">'.$row["id"].'</td>
-      <td style="border: 1px solid;">'.$row["firstName"].'</td>
-      <td style="border: 1px solid;">'.$row["lastName"].'</td>
-      <td style="border: 1px solid;">'.$row["emailAddress"].'</td>
+      <td style="border: 1px solid;">'.$row["firstname"].'</td>
+      <td style="border: 1px solid;">'.$row["lastname"].'</td>
+      <td style="border: 1px solid;">'.$row["email"].'</td>
 
       <td class="text-center" style="border: 1px solid;">
       <button class=" editusersbutton btn btn-info" id="edit" data-id="'.$row["id"].'" ><i class="fa-solid fa-pen-to-square"></i></button> 

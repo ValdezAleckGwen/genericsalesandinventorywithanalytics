@@ -264,26 +264,26 @@ function fill_unit_select_box_branch($connect)
 
                 <div class="mb-3">
                     <label for="">ID</label>
-                    <input type="text" name="id" class="form-control" value="<?php echo createId('tblusers');?>" readonly/>
+                    <input type="text" name="id" class="form-control userid"  value="" readonly/>
                 </div>
 
                 <div class="mb-3">
                     <label for="">FIRST NAME</label>
-                    <input type="text" name="firstname" class="form-control" />
+                    <input type="text" name="firstname" class="form-control firstname" />
                 </div>
 
                  <div class="mb-3">
                     <label for="">LAST NAME</label>
-                    <input type="text" name="lastname" class="form-control" />
+                    <input type="text" name="lastname" class="form-control lastname" />
                 </div>
 
                 <div class="mb-3">
                     <label for="">EMAIL ADDRESS</label>
-                    <input type="text" name="email" class="form-control" />
+                    <input type="text" name="email" class="form-control email" />
                 </div>
                 <div class="mb-3">
                 <label for="permission">Permission</h5>
-                <select name="permission" class="form-control permission" id="permission"><option value="">Select Permission</option>
+                <select name="permission" class="form-control permission"><option value="">Select Permission</option>
                     <option value="1">Admin</option>
                     <option value="2">Cashier</option>
                     <option value="3">Stock Manager</option></select>
@@ -291,7 +291,7 @@ function fill_unit_select_box_branch($connect)
 
                 <div class="mb-3">
                 <label for="branch_id">For Branch</h5>
-                <select name="branch" class="form-control branch" id="branch"><option value="">Select Branch</option><?php echo fill_unit_select_box_branch($connect); ?></select>
+                <select name="branch" class="form-control branch"><option value="">Select Branch</option><?php echo fill_unit_select_box_branch($connect); ?></select>
                 </div>
 
             <div class="modal-footer">
@@ -384,10 +384,11 @@ function fill_unit_select_box_branch($connect)
         $(document).on('click', '#edit', function () {
 
            var id = $(this).data('id');
-            alert(id);
+           $('#userEditModal').modal('show');
+        
             $.ajax({
                 type: "GET",
-                url: "..actions/edituser.php?",
+                url: "..actions/edituser.php",
                 success: function (response) {
 
                     var res = jQuery.parseJSON(response);
@@ -396,14 +397,14 @@ function fill_unit_select_box_branch($connect)
                         alert(res.message);
                     }else if(res.status == 200){
 
-                        $('id').val(res.data.id);
+                        $('#id').val(res.data.id);
                         $('#firstname').val(res.data.firstname);
                         $('#lastname').val(res.data.lastname);
                         $('#email').val(res.data.email);
                         $('#permission').val(res.data.permission);
                         $('#branch').val(res.data.branch);
-
-                        $('#userEditModal').modal('show');
+                        
+                        
                     }
 
                 }
