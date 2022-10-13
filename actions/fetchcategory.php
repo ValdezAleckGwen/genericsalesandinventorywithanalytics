@@ -64,7 +64,7 @@ if($total_data > 0)
   foreach($result as $row)
   {
     $output .= '
-    <tr>
+    <tr data-id="'.$row["categoryid"].'">
       <td style="border: 1px solid;">'.$row["categoryid"].'</td>
       <td style="border: 1px solid;">'.$row["categoryname"].'</td>
       <td class="text-center" style="border: 1px solid;"> <button class="btn btn-info" id="#" data-id="#"><i class="fa-solid fa-pen-to-square"> </i></button> <button class="delete btn btn-danger" id="del_'.$row["categoryid"].'" data-id="'.$row["categoryid"].'"><i class="fa-solid fa-circle-minus" ></i></button></td>
