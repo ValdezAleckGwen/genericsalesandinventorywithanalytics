@@ -196,7 +196,7 @@ function fill_unit_select_box_branch($connect)
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <form id="saveUser">
+        <form id="saveuser">
             <div class="modal-body">
 
                 <div id="errorMessage" class="alert alert-warning d-none"></div>
@@ -337,11 +337,11 @@ function fill_unit_select_box_branch($connect)
 
   });
 
-          $(document).on('submit', '#saveUser', function (e) {
+          $(document).on('submit', '#saveuser', function (e) {
             e.preventDefault();
 
             var formData = new FormData(this);
-            formData.append("save_student", true);
+            formData.append("save_user", true);
 
             $.ajax({
                 type: "POST",
@@ -358,7 +358,7 @@ function fill_unit_select_box_branch($connect)
                         $('#errorMessage').text(res.message);
 
                     }else if(res.status == 200){
-
+                        alert('egg')
                         $('#errorMessage').addClass('d-none');
                         $('#userAddModal').modal('hide');
                         $('#saveUser')[0].reset();
@@ -393,14 +393,14 @@ function fill_unit_select_box_branch($connect)
                 data: {id: id},
                 dataType: "JSON",
                 success: function (data) {
-                
+                var branchid = $.trim(data.branchid);
                 // var res = jQuery.parseJSON(response)
                 $('#eid').val(data.id);
                 $('#efirstname').val(data.firstname);
                 $('#elastname').val(data.lastname);
                 $('#eemail').val(data.email);
                 $('#epermission').val(data.permission);
-                $('#ebranch').val(data.branchid);
+                $('#ebranch').val(branchid);
 
                 $('#userEditModal').modal('show');
                         
@@ -416,35 +416,39 @@ function fill_unit_select_box_branch($connect)
             e.preventDefault();
 
             var formData = new FormData(this);
-            formData.append("update_user", true);
+            formData.append("edit_user", true);
 
             $.ajax({
                 type: "POST",
-                url: "code.php",
+                url: "../actions/insertuser.php",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    
+                    alert(response)
                     var res = jQuery.parseJSON(response);
+                    
                     if(res.status == 422) {
-                        $('#errorMessageUpdate').removeClass('d-none');
-                        $('#errorMessageUpdate').text(res.message);
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
 
                     }else if(res.status == 200){
 
-                        $('#errorMessageUpdate').addClass('d-none');
+                        $('#errorMessage').addClass('d-none');
+                        $('#userAddModal').modal('hide');
+                        $('#saveUser')[0].reset();
 
                         alertify.set('notifier','position', 'top-right');
                         alertify.success(res.message);
-                        
-                        $('#userEditModal').modal('hide');
-                        $('#editUsers')[0].reset();
 
                         $('#myTable').load(location.href + " #myTable");
 
                     }else if(res.status == 500) {
-                        alert(res.message);
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    } else if (res.status == 69) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
                     }
                 }
             });
