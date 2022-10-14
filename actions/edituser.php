@@ -2,47 +2,30 @@
 
 include 'database_connection.php';
 
-if(isset($_POST['update_user']))
+if(isset($_GET['id']))
 {
-    $id = mysqli_real_escape_string($connect, $_POST['id']);
+    $id = $_GET['id'];
+    $query = "SELECT id, firstname, lastname, email, permission, branchid FROM tblusers WHERE id = :id";
 
-    $name = mysqli_real_escape_string($connect, $_POST['name']);
-    $email = mysqli_real_escape_string($connect, $_POST['email']);
-    $phone = mysqli_real_escape_string($connect, $_POST['phone']);
-    $course = mysqli_real_escape_string($connect, $_POST['course']);
+    $statement  = $connect->prepare($query);
+    $statement->execute([
+        ':id' => $id,
+    ]);
 
-    if($name == NULL || $email == NULL || $phone == NULL || $course == NULL)
-    {
-        $res = [
-            'status' => 422,
-            'message' => 'All fields are mandatory'
-        ];
-        echo json_encode($res);
-        return;
+    $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    foreach($users as $user) {
+        $data['id'] = $user['id'];
+        $data['firstname'] = $user['firstname'];
+        $data['lastname'] = $user['lastname'];
+        $data['email'] = $user['email'];
+        $data['permission'] = $user['permission'];
+        $data['branchid'] = $user['branchid'];
     }
 
-    $query = "UPDATE students SET name='$name', email='$email', phone='$phone', course='$course' 
-                WHERE id='$id'";
-    $query_run = mysqli_query($connect, $query);
+    echo json_encode($data);
 
-    if($query_run)
-    {
-        $res = [
-            'status' => 200,
-            'message' => 'User Updated Successfully'
-        ];
-        echo json_encode($res);
-        return;
-    }
-    else
-    {
-        $res = [
-            'status' => 500,
-            'message' => 'User Not Updated'
-        ];
-        echo json_encode($res);
-        return;
-    }
+} else {
+    echo "no data found";
 }
-
 ?>

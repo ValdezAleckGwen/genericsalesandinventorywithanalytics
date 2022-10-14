@@ -254,7 +254,7 @@ function fill_unit_select_box_branch($connect)
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
-        <form id="editUsers">
+        <form id="edituser">
             <div class="modal-body">
 
                 <div id="errorMessageUpdate" class="alert alert-warning d-none"></div>
@@ -264,34 +264,34 @@ function fill_unit_select_box_branch($connect)
 
                 <div class="mb-3">
                     <label for="">ID</label>
-                    <input type="text" name="id" class="form-control userid"  value="" readonly/>
+                    <input type="text" name="id" class="form-control userid"   id="eid" value="" readonly/>
                 </div>
 
                 <div class="mb-3">
                     <label for="">FIRST NAME</label>
-                    <input type="text" name="firstname" class="form-control firstname" />
+                    <input type="text" name="firstname" class="form-control firstname" id="efirstname" />
                 </div>
 
                  <div class="mb-3">
                     <label for="">LAST NAME</label>
-                    <input type="text" name="lastname" class="form-control lastname" />
+                    <input type="text" name="lastname" class="form-control lastname" id="elastname" />
                 </div>
 
                 <div class="mb-3">
                     <label for="">EMAIL ADDRESS</label>
-                    <input type="text" name="email" class="form-control email" />
+                    <input type="text" name="email" class="form-control email" id="eemail" />
                 </div>
                 <div class="mb-3">
                 <label for="permission">Permission</h5>
-                <select name="permission" class="form-control permission"><option value="">Select Permission</option>
+                <select name="permission" class="form-control permission" id="epermission"><option value="">Select Permission</option>
                     <option value="1">Admin</option>
                     <option value="2">Cashier</option>
                     <option value="3">Stock Manager</option></select>
                 </div>
 
                 <div class="mb-3">
-                <label for="branch_id">For Branch</h5>
-                <select name="branch" class="form-control branch"><option value="">Select Branch</option><?php echo fill_unit_select_box_branch($connect); ?></select>
+                <label for="ebranch">For Branch</h5>
+                <select name="branch" class="form-control branch" id="ebranch"><option value="">Select Branch</option><?php echo fill_unit_select_box_branch($connect); ?></select>
                 </div>
 
             <div class="modal-footer">
@@ -384,35 +384,35 @@ function fill_unit_select_box_branch($connect)
         $(document).on('click', '#edit', function () {
 
            var id = $(this).data('id');
-           $('#userEditModal').modal('show');
-        
+           
+           
+            
             $.ajax({
                 type: "GET",
-                url: "..actions/edituser.php",
-                success: function (response) {
+                url: "../actions/edituser.php",
+                data: {id: id},
+                dataType: "JSON",
+                success: function (data) {
+                
+                // var res = jQuery.parseJSON(response)
+                $('#eid').val(data.id);
+                $('#efirstname').val(data.firstname);
+                $('#elastname').val(data.lastname);
+                $('#eemail').val(data.email);
+                $('#epermission').val(data.permission);
+                $('#ebranch').val(data.branchid);
 
-                    var res = jQuery.parseJSON(response);
-                    if(res.status == 404) {
-
-                        alert(res.message);
-                    }else if(res.status == 200){
-
-                        $('#id').val(res.data.id);
-                        $('#firstname').val(res.data.firstname);
-                        $('#lastname').val(res.data.lastname);
-                        $('#email').val(res.data.email);
-                        $('#permission').val(res.data.permission);
-                        $('#branch').val(res.data.branch);
+                $('#userEditModal').modal('show');
                         
                         
-                    }
+                   
 
                 }
             });
 
         });
 
-        $(document).on('submit', '#editUsers', function (e) {
+        $(document).on('submit', '#edituser', function (e) {
             e.preventDefault();
 
             var formData = new FormData(this);
