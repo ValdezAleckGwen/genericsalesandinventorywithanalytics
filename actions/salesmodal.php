@@ -43,7 +43,7 @@ $sales = $statement->fetchAll();
     </head>
     <body>
 
-            <div class="container">
+            <div class="container" style="pointer-events: none;">
                 <div class="row printme">
                     <div class="col-sm-6 text-muted">
                         <h4 class="fs35 gorditaB text-uppercase mb-1">

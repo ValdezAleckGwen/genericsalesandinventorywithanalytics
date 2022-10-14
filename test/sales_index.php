@@ -182,7 +182,7 @@
 <script>
   $(document).ready(function(){
     //modal start
-    $(document).on('click', 'tr', function() {
+    $(document).on('click', '.data', function() {
       var id = $(this).data('id');
 
       $.ajax({
