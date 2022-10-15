@@ -33,9 +33,20 @@ function getId(string $uid) {
 }
 
 
-getFirstName('U-0000001');
-getId('U-0000001');
-
+function getBranch(string $uid) {
+	$db = new DbConnect;
+	$conn = $db->connect();
+	
+	$stmt = $conn->prepare("SELECT tblusers.branchid AS userid FROM tblusers WHERE id = :uid");
+	$stmt->execute([
+		':uid' => $uid
+	]);
+	$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	foreach ($users as $user) {
+		$branchid = $user['branchid'];
+	}
+	return $branchid;
+}
 
 
 

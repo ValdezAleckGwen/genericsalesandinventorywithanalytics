@@ -57,7 +57,7 @@ $output = '
     <th class="text-center" style="border: 1px solid;">ID</th>
     <th class="text-center" style="border: 1px solid;">First Name</th>
     <th class="text-center" style="border: 1px solid;">Last Name</th>
-    <th class="text-center" style="border: 1px solid;">Email Address</th>
+    <th class="text-center" style="border: 1px solid;">Permision</th>
     <th class="text-center" style="border: 1px solid;">Action</th>
 
   </tr>
@@ -66,12 +66,29 @@ if($total_data > 0)
 {
   foreach($result as $row)
   {
+    $permission = $row["permission"];
+    $pvalue = '';
+    switch ($permission) {
+      case 1:
+        $pvalue = 'ADMIN';
+        break;
+      case 2:
+        $pvalue = 'CASHIER';
+        break;
+      case 3:
+        $pvalue = 'STOCK MANAGER';
+        break;
+      
+      default:
+        
+        break;
+    }
     $output .= '
     <tr>
       <td style="border: 1px solid;">'.$row["id"].'</td>
       <td style="border: 1px solid;">'.$row["firstname"].'</td>
       <td style="border: 1px solid;">'.$row["lastname"].'</td>
-      <td style="border: 1px solid;">'.$row["email"].'</td>
+      <td style="border: 1px solid;">'.$pvalue.'</td>
 
       <td class="text-center" style="border: 1px solid;">
       <button class=" editusersbutton btn btn-info" id="edit" data-id="'.$row["id"].'" ><i class="fa-solid fa-pen-to-square"></i></button> 
