@@ -71,6 +71,15 @@
 			case 'tblstocktransfer':
 				$index = "ST-";
 				break;
+			case 'tblstocktransfer':
+				$index = "STI-";
+				break;
+			case 'tblsalesreturn':
+				$index = "SR-";
+				break;
+			case 'tblsalesreturnitem':
+				$index = "SRI-";
+				break;
 			default:
 				$index = "";
 				break;

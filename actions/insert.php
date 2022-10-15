@@ -23,7 +23,7 @@ if(isset($_POST["item_id"]))
 
 	// create a sale
 	$salesquery = "
-	INSERT INTO tblsales (id, total, taxid, vat, vattablesale, pending, userid, branchid, auditid, active) VALUES (:salesid, :total, :taxid, :vat, :vattablesale, :pending, :userid, :branchid, :audit, 1)
+	INSERT INTO tblsales (id, total, taxid, vat, vattablesale, pending, userid, branchid, audit, active) VALUES (:salesid, :total, :taxid, :vat, :vattablesale, :pending, :userid, :branchid, :audit, 1)
 	";
 
 	$statement  = $connect->prepare($salesquery);

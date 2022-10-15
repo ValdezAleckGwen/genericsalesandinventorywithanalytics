@@ -105,9 +105,7 @@ if(isset($_POST["item_id"]))
 
 	$statement  = $connect->prepare($deliveryorderquery);
 
-	// if ($quantity < 0) {
-	// 	$quantity = 0;
-	// }
+
 	$statement->execute([
 		':purchaseorderitemid' => $purchaseorderitemid,
 		':quantity' => $quantity,

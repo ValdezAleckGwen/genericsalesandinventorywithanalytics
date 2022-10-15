@@ -1,18 +1,9 @@
 <?php
 
-$connect = new PDO("mysql:host=localhost; dbname=itlog", "root", "");
+include '../actions/database_connection.php'
+include '../actions/getdata.php';
 
-// function get_total_row($connect)
-// {
-//   $query = "
-//   SELECT * FROM tblcategory
-//   ";
-//   $statement = $connect->prepare($query);
-//   $statement->execute();
-//   return $statement->rowCount();
-// }
 
-// $total_record = get_total_row($connect);
 
 $limit = '10';
 $page = 1;
@@ -33,6 +24,7 @@ tblproducts.markupprice AS markupprice,
 tblcategory.name as categoryname,
 tblinventory.id as inventoryid,
 tblinventory.quantity as quantity
+tblinventory.branchid as branchid,
 FROM tblproducts 
 INNER JOIN tblsupplier 
 ON tblproducts.supplier=tblsupplier.id
@@ -40,7 +32,7 @@ INNER JOIN tblcategory
 ON tblproducts.category=tblcategory.id
 INNER JOIN tblinventory
 ON tblinventory.productid = tblproducts.id
-WHERE tblproducts.active = 1
+WHERE tblproducts.active = 1 
 ";
 
 if($_POST['query'] != '')
