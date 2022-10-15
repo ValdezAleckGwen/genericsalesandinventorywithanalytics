@@ -9,7 +9,7 @@
 
 body{
   min-height: 100vh;
-  background: url(../../Admin/assets/images/bg.png)no-repeat;
+  background: url(assets/images/bg.png)no-repeat;
   background-size: cover;
   background-position: center;
 }
@@ -90,7 +90,7 @@ input{
 }
 
 .side-bar{
-  background: #262d32;
+  background: #38739a;
   width: 310px;
   height: 100%;
   position: fixed;
@@ -125,7 +125,7 @@ input{
 }
 
 .side-bar .menu .item a:hover{
-  background: #7c8085;
+  background: #2d6184;
   transition: 500 0.3s ease;
   font-weight: 900;
 }

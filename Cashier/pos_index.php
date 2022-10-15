@@ -24,6 +24,7 @@ function fill_unit_select_box($connect)
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>Point of Sales</title>
 		<link rel="stylesheet" href="../admin/assets/style.css">
 		<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
@@ -52,17 +53,17 @@ function fill_unit_select_box($connect)
 
 
         <!-- Point of salesv2-->
-        <div class="item"><a href="posv2_index.php"><i class="fa-regular fa-calculator"></i>Point of Salesv2</a></div>
+        <div class="item"><a href="pos_index.php"><i class="fa-regular fa-calculator"></i>Point of Sales</a></div>
 
         <!-- Logout -->
-        <div class="item"><a href="../admin/login.php"><i class="fa-regular fa-arrow-right-from-bracket"></i>Logout</a></div>
+        <div class="item"><a href="../login.php"><i class="fa-regular fa-arrow-right-from-bracket"></i>Logout</a></div>
 
         <div class="clearfix"></div>
     <br/>
 
         </div>
     </div>
-		<div class="usericon">Cashier <i class="fa-regular fa-user"></i></div>
+<!-- <div class="usericon"><?php //echo displayUser(); ?> <i class="fa-regular fa-user"></i></div> -->
 
     <script type="text/javascript">
     $(document).ready(function(){
@@ -75,8 +76,8 @@ function fill_unit_select_box($connect)
     <div class="main">
 
   
-    <h3>POINT OF SALES</h3><br>
-		<div class="container">
+    <h3 style="margin-top: 40px; font-weight: 600;">POINT OF SALES</h3><br>
+		<div class="container" style="margin-top: -39px;">
 			<br />
 			<div class="card">
 				<div class="card-header">Enter Item Details</div>
@@ -85,22 +86,25 @@ function fill_unit_select_box($connect)
 					<form method="post" id="insert_form">
 						<div class="table-repsonsive">
 							<span id="error"></span>
-							<table class="table table-bordered" id="item_table">
+							<table class="table table-bordered" id="item_table" style="max-height: 150px; overflow-y: scroll !important;">
+								<thead style=" display: block; ">
 								<tr>
-									<th width="15%">Product Code</th>
+									<th width="11.45%">Product Code</th>
 									<th width="40%">Product Name</th>
-									<th>Price</th>
+									<th width="12%">Price</th>
 									<th width="10%">Available Quantity</th>
 									<th width="10%">Enter Quantity</th>
 									<th>Total Price</th>
 									<th><button type="button" name="add" class="btn btn-success btn-sm add"><i class="fas fa-plus"></i></button></th>
 								</tr>
+								</thead>
+								<tbody id="add-row" style="display: block; height: 500px;overflow-y: auto;overflow-x: hidden;">
+								<tr>
+									
+								</tr>
+								</tbody>
 							<footer>
 							<div class="row">
-
-								<div class="col-sm-7">
-									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
-								</div>
 
 								<div class="col col-sm-2">
 									<label>Tax</label>
@@ -129,6 +133,9 @@ function fill_unit_select_box($connect)
 							</footer>
 							</table>
 							</div>
+								<div class="col-sm-6">
+									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
+								</div>
 						</div>
 					</form>
 					
@@ -147,31 +154,27 @@ $(document).ready(function(){
 	function add_input_field(count)
 	{
 		
-		
 
 		var html = '';
 		
-		html += '<tr>';
+		html += '<tr style="display: block;">';
 
-		html += '<td><select name="item_id[]" class="col col-sm-2 form-control selectpicker item_id" data-live-search="true"><option value="">Select Unit</option><?php echo fill_unit_select_box($connect); ?></select></td>';
-		html += '<td><input type="text" name="item_name[]" class="col col-sm-5 form-control item_name" readonly/></td>';
-
-		html += '<td><input type="text" name="item_price[]" class="col col-sm-2 form-control item_price" readonly/></td>';
-
-		html += '<td><input type="text" name="available_quantity[]" class="col col-sm-1 form-control available_quantity" readonly/></td>';
-
-		html += '<td><input type="text" name="item_quantity[]" class="col col-sm-1 form-control item_quantity" /></td>';
-
-		html += '<td><input type="text" name="item_total[]" class="col col-sm-2 form-control item_total" readonly/></td>';
-
-
+		html += '<td width="5%"><select name="item_id[]" class="col col-sm-2 form-control selectpicker item_id" data-live-search="true"><option value="">Select Unit</option><?php echo fill_unit_select_box($connect); ?></select></td>';
 		
+		html += '<td width="40%"><input type="text" name="item_name[]" class="col col-sm-5 form-control item_name" readonly/></td>';
 
+		html += '<td width="12%"><input type="text" name="item_price[]" class="col col-sm-2 form-control item_price" readonly/></td>';
+
+		html += '<td width="10.05%"><input type="text" name="available_quantity[]" class="col col-sm-1 form-control available_quantity" readonly/></td>';
+
+		html += '<td width="10%"><input type="text" name="item_quantity[]" class="col col-sm-1 form-control item_quantity" /></td>';
+
+		html += '<td width="11.22%"><input type="text" name="item_total[]" class="col col-sm-2 form-control item_total" readonly/></td>';
 		
 
 		var remove_button = '';
 
-		if(count > 0)
+		if(count >= 0)
 		{
 			remove_button = '<button type="button" name="remove" class="btn btn-danger btn-sm remove"><i class="fas fa-minus"></i></button>';
 		}

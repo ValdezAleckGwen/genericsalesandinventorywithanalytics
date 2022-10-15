@@ -1,5 +1,5 @@
 <html>
-<title>NARCI - Log In</title>
+<title>Log In</title>
 <head>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,7 +10,6 @@
 <body>
 
     <div class="wrapper">
-        <img src="assets/images/narci_login_logo.png" alt="NARCI Logo">
         <h2>Login to your account</h2>
 
         <div class="login">
