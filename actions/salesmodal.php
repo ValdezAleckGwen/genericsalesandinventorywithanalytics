@@ -43,7 +43,7 @@ $sales = $statement->fetchAll();
     </head>
     <body>
 
-            <div class="container">
+            <div class="container" style="pointer-events: none;">
                 <div class="row printme">
                     <div class="col-sm-6 text-muted">
                         <h4 class="fs35 gorditaB text-uppercase mb-1">
@@ -132,40 +132,44 @@ $sales = $statement->fetchAll();
 
                                     ?>
 
-                                </tbody>
-                                <tfoot>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-end ps-4">
+                                        VATABLE AMOUNT
+                                    </td>
+                                    <td class="bg-light border">
+                                        <p><?php echo $sales[0]['vattablesale']; ?></p>
+                                    </td>
 
                                     <tr>
-                                        <td>
-                                        </td>
-                                        <td>
-                                        </td>
-                                        <td class="text-end ps-4">
-                                            VATABLE AMOUNT
-                                        </td>
-                                        <td class="bg-light border">
-                                            <p><?php echo $sales[0]['vattablesale']; ?></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <td></td>
                                         <td></td>
-                                        <td class="text-end ps-4">
+                                        <td></td>
+                                        <td class="text-end ps-4" style = "border-bottom:4px solid">
                                             VAT
                                         </td>
-                                        <td class="border">
-                                            <p><?php echo $sales[0]['vat']; ?></p>                                        </td>
+                                        <td class="border" style = "border-bottom:4px solid">
+                                            <p><?php echo $sales[0]['vat']; ?></p>
+                                        </td>
                                     </tr>
-                                    <tr>
 
-                                    </tr>
                                     <tr>
+                                        <td></td>
                                         <td colspan="2" class="text-end border_sm_top"></td>
                                         <td class="text-end border-top">TOTAL AMOUNT</td>
                                         <td class="border">
                                             <p><?php echo $sales[0]['grandtotal']; ?> </p>
                                         </td>
                                     </tr>
+
+                                </tbody >
+                                <tfoot>
+
+
+
+
+
                                 </tfoot>
                             </table>
                         </div>

@@ -42,9 +42,10 @@ $deors = $statement->fetchAll();
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="icon" href="favicon.png" type="image/svg">
     </head>
-    <body>
+    <body >
 
-            <div class="container">
+
+            <div class="container" style="pointer-events: none;">
                 <div class="row printme">
                     <div class="col-sm-6 text-muted">
                         <h4 class="fs35 gorditaB text-uppercase mb-1">
@@ -54,37 +55,22 @@ $deors = $statement->fetchAll();
                             Address Here
                         </p>
                     </div>
+
                     <div class="col-sm-6 text-muted mt-sm-0 mt-4 d-none d-sm-flex justify-content-sm-end">
                         <div>
                             <h4 class="fs35 gorditaB text-uppercase mb-1">
                                 Invoice
                             </h4>
                             <p class="fs18">
-                                Date: 10/28/2021
+                                DO ID: <?php echo $deors[0]['delivery']; ?>
                             </p>
                             <p class="fs18">
                                 Invoice # 001
                             </p>
                         </div>
                     </div>
-                    <div class="col-sm-12 col-6 mt-sm-0 mt-4">
-                        <h4 class="fs18 text-uppercase mb-2">
-                            ISSUED BY:
-                        </h4>
-                        <h4 class="fs22 text-uppercase mb-1 d-flex align-items-center">
-                            DO ID: <?php echo $deors[0]['delivery']; ?>
-                        </h4>
-                    </div>
-                    <div class="col-6 text-muted mt-sm-0 mt-4 d-sm-none d-flex justify-content-end">
-                        <div>
-                            <h4 class="fs35 gorditaB text-uppercase mb-1">
-                                Invoice
-                            </h4>
-                            <p class="fs18">
-                                Date: <?php echo $deors[0]['deliverydate']; ?>
-                            </p>
-                        </div>
-                    </div>
+
+
                     <div class="col-sm-12 pt-4 pb-5 mb-5">
                         <div class="table-responsive-sm">
                             <table class="table">
@@ -125,11 +111,11 @@ $deors = $statement->fetchAll();
                                         $output .= '<td>
                                                 <p>'.$deor['quantity'].'</p>
                                             </td>';
-                                        $output .= '<td>
+                                        $output .= '<td style = "border-bottom:5px solid">
                                                 <p>'.$deor['price'].'</p>
                                             </td>';
                                         
-                                        $output .= '<td>
+                                        $output .= '<td style = "border-bottom:5px solid">
                                                 <p>'.$deor['total'].'</p>
                                             </td>';
                                         $output .= '</tr>';
@@ -147,6 +133,8 @@ $deors = $statement->fetchAll();
 
                                     </tr>
                                     <tr>
+                                        <td></td>
+                                        <td></td>
                                         <td colspan="2" class="text-end border_sm_top"></td>
                                         <td class="text-end border-top">TOTAL AMOUNT</td>
                                         <td class="border">

@@ -77,7 +77,7 @@ if($total_data > 0)
   foreach($result as $row)
   {
     $output .= '
-    <tr data-id="'.$row["salesid"].'">
+    <tr class="data" data-id="'.$row["salesid"].'">
       <td style="border: 1px solid;">'.$row["salesid"].'</td>
       <td style="border: 1px solid;">'.$row["branchname"].'</td>
       <td style="border: 1px solid;">'.$row["username"].'</td>

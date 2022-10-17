@@ -143,11 +143,8 @@
   <div class="flex-container">
      <div class="flex-items">
        <div class="table-title">
-        <h3>Purchase Order</h3>
+        <h3>PURCHASE ORDER</h3>
         <div style="display: inline">
-           <a href="addproduct_index.php">
-              <button type="button" class="btn btn-primary" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-circle-plus"></i> Add</button>
-            </a>
             <button type="button" class="btn btn-dark" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-print"></i> Print</button>
         <div style="float: right;">
             <label><span>Search: </span><input type="text" name="search_box" id="search_box" value=""/></label>       
@@ -158,14 +155,22 @@
         <div border='1' class='table-responsive' id="dynamic_content">
         <!--product content-->
         </div>
-
-        <!-- modal start -->
-        <div class="modal modal-lg fade " id="pomodal" role="dialog">  
+        
+      <!-- modal start -->
+        <div class="modal fade " id="pomodal" role="dialog" style="width:80%; overflow-x: auto; white-space: nowrap; margin:auto; margin-top:10%">
               <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">×</button>
                   </div>
-                  <div class="modal-body">
+                    <style>
+                        #model-body-container > .container{
+                            width: 100% !important;}
+                        #model-body-container .col-sm-6
+                        {
+                            width: 25% !important;
+                        }
+                    </style>
+                  <div class="modal-body" id='model-body-container'>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -179,7 +184,7 @@
 <script>
   $(document).ready(function(){
     //modal start
-    $(document).on('click', 'tr', function() {
+    $(document).on('click', '.data', function() {
       var id = $(this).data('id');
       
 
