@@ -104,23 +104,21 @@ function fill_unit_select_box($connect)
 								</tr>
 								</tbody>
 							<footer>
-							<div class="row">
+							</footer>
+							</table>
+							</div>
+									
 
-								<div class="col col-sm-2">
+								<div class="col-sm-6" style="float: left;">
+									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
+								</div>	
+								<div class="col col-sm-2" style="float: left;">
 									<label>Tax</label>
 									<select name="tax" id="tax" class="form-control">
 										<option value="1">Regular</option>
 										<option value="2">Discount</option>
 										<option value="3">Tax Free</option>
 									</select>
-								</div>
-									
-								</div>
-							</footer>
-							</table>
-							</div>
-								<div class="col-sm-6" style="float: left;">
-									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
 								</div>
 								<div class="col col-sm-3" style="float: right;">
 									<div class="input-group mb-3">
