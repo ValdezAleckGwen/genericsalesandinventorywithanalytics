@@ -41,7 +41,7 @@ INNER JOIN tblbranch
 ON tbldeliveryorder.branchid=tblbranch.id
 INNER JOIN tblusers
 ON tbldeliveryorder.userid=tblusers.id
-WHERE tbldeliveryorder.active = 1
+
 ";
 
 if($_POST['query'] != '')
