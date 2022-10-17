@@ -104,9 +104,15 @@ function fill_unit_select_box($connect)
 								</tr>
 								</tbody>
 							<footer>
-							<div class="row">
+							</footer>
+							</table>
+							</div>
+									
 
-								<div class="col col-sm-2">
+								<div class="col-sm-6" style="float: left;">
+									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
+								</div>	
+								<div class="col col-sm-2" style="float: left;">
 									<label>Tax</label>
 									<select name="tax" id="tax" class="form-control">
 										<option value="1">Regular</option>
@@ -114,8 +120,7 @@ function fill_unit_select_box($connect)
 										<option value="3">Tax Free</option>
 									</select>
 								</div>
-
-								<div class="col col-sm-3">
+								<div class="col col-sm-3" style="float: right;">
 									<div class="input-group mb-3">
 									  <span class="input-group-text" id="basic-addon3">Vatable Sale</span>
 									  <input type="text" class="form-control"name="vatable-sale" id="vatable-sale" aria-describedby="basic-addon3" readonly>
@@ -128,14 +133,6 @@ function fill_unit_select_box($connect)
 									  <span class="input-group-text" id="basic-addon3">Total</span>
 									  <input type="text" name="total" id="total" class="form-control total" readonly/>
 									</div>
-									
-								</div>
-							</footer>
-							</table>
-							</div>
-								<div class="col-sm-6">
-									<input type="submit" name="submit" id="submit_button" class="btn btn-primary" value="Insert" />
-								</div>
 						</div>
 					</form>
 					
