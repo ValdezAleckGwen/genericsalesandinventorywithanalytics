@@ -4,6 +4,7 @@ include('database_connection.php');
 
 
 
+
     
 $id = 'PO-0000001';
 
@@ -40,6 +41,9 @@ $purchases = $statement->fetchAll();
 echo var_dump($purchases);
 
 
+
+=======
+	if (isset($_POST['item_id']))
 
 
 

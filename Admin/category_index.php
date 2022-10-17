@@ -1,58 +1,30 @@
+<?php
+    
+//index.php 
+include '../actions/adddata.php';
+include '../actions/database_connection.php';
+
+
+function fill_unit_select_box_branch($connect)
+{
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Category Dashboard</title>
-    <link rel="stylesheet" href="assets/style.css">
+    <title>Category</title>
+    <link rel="stylesheet" href="../admin/assets/style.css">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
-    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script> 
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js'></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script>
-            $(document).ready(function () {
-
-                // Delete 
-                $(document).on('click', '.delete', function () {
-                    var el = this;
-
-                    // Delete id
-                    var deleteid = $(this).data('id');
-
-                    // Confirm box
-                    bootbox.confirm("Do you really want to delete record?", function (result) {
-
-                        if (result) {
-                            // AJAX Request
-                            $.ajax({
-                                url: '../actions/deletecategory.php',
-                                type: 'POST',
-                                data: {id: deleteid},
-                                success: function (response) {
-
-                                    // Removing row from HTML Table
-                                    if (response == ' ok') {
-                                        bootbox.alert('Record deleted.');
-                                        $(el).closest('tr').css('background', 'tomato');
-                                        $(el).closest('tr').fadeOut(800, function () {
-                                            $(this).remove();
-                                        });
-
-                                    } else {
-                                        bootbox.alert('Record not deleted');
-                                    }
-
-                                }
-                            });
-                        }
-
-                    });
-
-                });
-            });
-        </script>
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
     
   </head>
   <body>
@@ -107,7 +79,6 @@
           </div>
         </div>
 
-
         <!-- Purchase Order -->
         <div class="item"><a href="purchase_index.php"><i class="fa-regular fa-file-invoice"></i>Purchase Order</a></div>
 
@@ -151,7 +122,7 @@
 
 
         <!-- Audit Logs -->
-        <div class="item"><a href="audit_index.php"><i class="fa-regular fa-file-chart-pie"></i>Audit Logs</a></div>            
+        <div class="item"><a href="audit_index.php"><i class="fa-regular fa-file-chart-pie"></i>Audit Logs</a></div>         
 
         <!-- Settings -->
         <div class="item">
@@ -169,8 +140,14 @@
     </div>
 
 
-    <div class="usericon">Admin <i class="fa-regular fa-user"></i></div>  
 
+  <!-- <div class="usericon"><?php //echo displayUser(); ?> <i class="fa-regular fa-user"></i></div> -->
+
+
+
+    
+    
+    
 
     <script type="text/javascript">
     $(document).ready(function(){
@@ -186,29 +163,65 @@
   <div class="flex-container">
      <div class="flex-items">
        <div class="table-title">
-        <h3>CATEGORY</h3> 
-
-        <div style="display: inline">
-          <a href="addcategory_index.php">
-            <button type="button" class="btn btn-primary" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-circle-plus"></i> Add</button>
-          </a>
-          <button type="button" class="btn btn-dark" style=" font-size: 16px; font-weight: 700;"><i class="fa-solid fa-print"></i> Print</button>
-        </div>
-
+        <h3>CATEGORY</h3>
+          <div style="display: inline;">
+                        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#userAddModal">
+                            Add Category
+                        </button>
+            <button type="button" class="btn btn-success" style="font-size: 16px; font-weight: 700;"><i class="fa-regular fa-circle-check"></i> Save</button>
+          </div>
           <div style="float: right;">
             <label><span>Search: </span><input type="text" name="search_box" id="search_box" value=""/></label>
           </div>
         </div>
-        <div class="table-responsive" id="dynamic_content">
-          
-
-        </div>
         
-        <br>
+        <div class="table-responsive" id="dynamic_content"></div>
+
      </div>
   </div>
 </div>
-</body>
+
+
+<div class="modal fade" id="userAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Category</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="saveCategory">
+            <div class="modal-body">
+
+                <div id="errorMessage" class="alert alert-warning d-none"></div>
+
+                <div class="mb-3">
+                    <label for="">ID</label>
+                    <input type="text" name="id" class="form-control" value="<?php echo createId('tblcategory');?>" readonly/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="">NAME</label>
+                    <input type="text" name="name" class="form-control" />
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Category</button>
+            </div>
+        </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+  </body>
 </html>
 <script>
   $(document).ready(function(){
@@ -239,4 +252,49 @@
     });
 
   });
+
+          $(document).on('submit', '#saveCategory', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            formData.append("save_category", true);
+
+
+            $.ajax({
+                type: "POST",
+                url: "../actions/insertcategory.php",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                  
+                    
+                    var res = jQuery.parseJSON(response);
+                    
+                    if(res.status == 422) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+
+                    }else if(res.status == 200){
+
+                        $('#errorMessage').addClass('d-none');
+                        $('#userAddModal').modal('hide');
+                        $('#saveCategory')[0].reset();
+
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success(res.message);
+
+                        $('#myTable').load(location.href + " #myTable");
+
+                    }else if(res.status == 500) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    } else if (res.status == 69) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    }
+                }
+            });
+
+        });
 </script>

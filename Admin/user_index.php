@@ -1,13 +1,43 @@
+<?php
+    
+//index.php 
+include '../actions/adddata.php';
+include '../actions/database_connection.php';
+
+
+function fill_unit_select_box_branch($connect)
+{
+    $output = '';
+
+    $query = "SELECT id AS branchid, name AS branchname from tblbranch WHERE active = 1";
+
+    $result = $connect->query($query);
+
+    foreach($result as $row)
+    {
+        $output .= '<option value="'.$row["branchid"].'">'.$row["branchname"] . '</option>';
+    }
+
+    return $output;
+}   
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NARCI - Users</title>
+
+    <title>Users</title>
     <link rel="stylesheet" href="assets/style.css">
+
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
     
   </head>
   <body>
@@ -123,7 +153,7 @@
     </div>
 
     
-    <div class="usericon">Admin <i class="fa-regular fa-user"></i></div>
+    <!-- <div class="usericon"><?php //echo displayUser(); ?> <i class="fa-regular fa-user"></i></div> -->
     
     <script type="text/javascript">
     $(document).ready(function(){
@@ -141,8 +171,10 @@
        <div class="table-title">
         <h3>USERS</h3>
           <div style="display: inline;">
-            <a href="adduser_index.php">
-            <button type="button" class="btn btn-primary" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-circle-plus"></i> Add</button></a>  
+                        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#userAddModal">
+                            Add User
+                        </button> 
+
             <button type="button" class="btn btn-success" style="font-size: 16px; font-weight: 700;"><i class="fa-regular fa-circle-check"></i> Save</button>
           </div>
           <div style="float: right;">
@@ -150,14 +182,129 @@
           </div>
         </div>
         
-        <div class="table-responsive" id="dynamic_content">
-          
-
-        </div>
+        <div class="table-responsive" id="dynamic_content"></div>
 
      </div>
   </div>
-</div>    
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="userAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="saveuser">
+            <div class="modal-body">
+
+                <div id="errorMessage" class="alert alert-warning d-none"></div>
+
+                <div class="mb-3">
+                    <label for="">ID</label>
+                    <input type="text" name="id" class="form-control" value="<?php echo createId('tblusers');?>" readonly/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="">FIRST NAME</label>
+                    <input type="text" name="firstname" class="form-control" />
+                </div>
+
+                 <div class="mb-3">
+                    <label for="">LAST NAME</label>
+                    <input type="text" name="lastname" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="">EMAIL ADDRESS</label>
+                    <input type="text" name="email" class="form-control" />
+                </div>
+                <div class="mb-3">
+                <label for="permission">Permission</h5>
+                <select name="permission" class="form-control permission" id="permission"><option value="">Select Permission</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Cashier</option>
+                    <option value="3">Stock Manager</option></select>
+                </div>
+
+                <div class="mb-3">
+                <label for="branch_id">For Branch</h5>
+                <select name="branch" class="form-control branch" id="branch"><option value="">Select Branch</option><?php echo fill_unit_select_box_branch($connect); ?></select>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save User</button>    
+            </div>
+        </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Student</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="edituser">
+            <div class="modal-body">
+
+                <div id="errorMessageUpdate" class="alert alert-warning d-none"></div>
+
+                <input type="hidden" name="student_id" id="student_id" >
+
+
+                <div class="mb-3">
+                    <label for="">ID</label>
+                    <input type="text" name="id" class="form-control userid"   id="eid" value="" readonly/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="">FIRST NAME</label>
+                    <input type="text" name="firstname" class="form-control firstname" id="efirstname" />
+                </div>
+
+                 <div class="mb-3">
+                    <label for="">LAST NAME</label>
+                    <input type="text" name="lastname" class="form-control lastname" id="elastname" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="">EMAIL ADDRESS</label>
+                    <input type="text" name="email" class="form-control email" id="eemail" />
+                </div>
+                <div class="mb-3">
+                <label for="permission">Permission</h5>
+                <select name="permission" class="form-control permission" id="epermission"><option value="">Select Permission</option>
+                    <option value="1">Admin</option>
+                    <option value="2">Cashier</option>
+                    <option value="3">Stock Manager</option></select>
+                </div>
+
+                <div class="mb-3">
+                <label for="ebranch">For Branch</h5>
+                <select name="branch" class="form-control branch" id="ebranch"><option value="">Select Branch</option><?php echo fill_unit_select_box_branch($connect); ?></select>
+                </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Update Student</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
 
 
   </body>
@@ -191,4 +338,122 @@
     });
 
   });
+
+          $(document).on('submit', '#saveuser', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            formData.append("save_user", true);
+
+            $.ajax({
+                type: "POST",
+                url: "../actions/insertuser.php",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    
+                    var res = jQuery.parseJSON(response);
+                    
+                    if(res.status == 422) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+
+                    }else if(res.status == 200){
+                        alert('egg')
+                        $('#errorMessage').addClass('d-none');
+                        $('#userAddModal').modal('hide');
+                        $('#saveUser')[0].reset();
+
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success(res.message);
+
+                        $('#myTable').load(location.href + " #myTable");
+
+                    }else if(res.status == 500) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    } else if (res.status == 69) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    }
+                }
+            });
+
+        });
+
+
+        $(document).on('click', '#edit', function () {
+
+           var id = $(this).data('id');
+           
+           
+            
+            $.ajax({
+                type: "GET",
+                url: "../actions/edituser.php",
+                data: {id: id},
+                dataType: "JSON",
+                success: function (data) {
+                var branchid = $.trim(data.branchid);
+                // var res = jQuery.parseJSON(response)
+                $('#eid').val(data.id);
+                $('#efirstname').val(data.firstname);
+                $('#elastname').val(data.lastname);
+                $('#eemail').val(data.email);
+                $('#epermission').val(data.permission);
+                $('#ebranch').val(branchid);
+
+                $('#userEditModal').modal('show');
+                        
+                        
+                   
+
+                }
+            });
+
+        });
+
+        $(document).on('submit', '#edituser', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            formData.append("edit_user", true);
+
+            $.ajax({
+                type: "POST",
+                url: "../actions/insertuser.php",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    alert(response)
+                    var res = jQuery.parseJSON(response);
+                    
+                    if(res.status == 422) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+
+                    }else if(res.status == 200){
+
+                        $('#errorMessage').addClass('d-none');
+                        $('#userAddModal').modal('hide');
+                        $('#saveUser')[0].reset();
+
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success(res.message);
+
+                        $('#myTable').load(location.href + " #myTable");
+
+                    }else if(res.status == 500) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    } else if (res.status == 69) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    }
+                }
+            });
+
+        });
 </script>
