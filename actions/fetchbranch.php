@@ -27,28 +27,17 @@ else
 }
 
 $query = "
-SELECT tblproducts.id AS productid, 
-tblproducts.name AS productname, 
-tblproducts.price AS price, 
-tblproducts.markupprice AS markupprice, 
-tblsupplier.name as suppliername,
-tblcategory.name as categoryname
-FROM tblproducts 
-INNER JOIN tblsupplier 
-ON tblproducts.supplier=tblsupplier.id
-INNER JOIN tblcategory
-ON tblproducts.category=tblcategory.id
-WHERE tblproducts.active = 1
+SELECT id AS branchid, name AS branchname, branchaddress AS address, contactnumber AS contact FROM tblbranch WHERE active =1
 ";
 
 if($_POST['query'] != '')
 {
   $query .= '
-  AND tblproducts.name LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
+  AND tblbranch.name LIKE "%'.str_replace(' ', '%', $_POST['query']).'%" 
   ';
 }
 
-$query .= 'ORDER BY tblproducts.id ASC ';
+$query .= 'ORDER BY tblbranch.id ASC ';
 
 $filter_query = $query . 'LIMIT '.$start.', '.$limit.'';
 
@@ -65,12 +54,10 @@ $output = '
 <label>Total Records - '.$total_data.'</label>
 <table class="table table-striped table-bordered" style="background: #CDCDCD; border-collapse: collapse;">
   <tr>
-        <th class="text-center" style="border: 1px solid;">Product ID</th>
-        <th class="text-center" style="border: 1px solid;">Product Name</th>
-        <th class="text-center" style="border: 1px solid;">Supplier</th>
-        <th class="text-center" style="border: 1px solid;">Category</th>
-        <th class="text-left" style="border: 1px solid;">Price (₱)</th>
-        <th class="text-left" style="border: 1px solid;">Markup Price (₱)</th>
+        <th class="text-center" style="border: 1px solid;">Branch ID</th>
+        <th class="text-center" style="border: 1px solid;">Branch Name</th>
+        <th class="text-center" style="border: 1px solid;">Branch Address</th>
+        <th class="text-center" style="border: 1px solid;">Contact Number</th>
         <th class="text-center" style="border: 1px solid;">Action</th>
   </tr>
 ';
@@ -79,17 +66,15 @@ if($total_data > 0)
   foreach($result as $row)
   {
     $output .= '
-    <tr>
-      <td style="border: 1px solid;">'.$row["productid"].'</td>
-      <td style="border: 1px solid;">'.$row["productname"].'</td>
-      <td style="border: 1px solid;">'.$row["suppliername"].'</td>
-      <td style="border: 1px solid;">'.$row["suppliername"].'</td>
-      <td style="border: 1px solid;">'.$row["price"].'</td>
-      <td style="border: 1px solid;">'.$row["markupprice"].'</td>
+    <tr data-id="'.$row["branchid"].'">
+      <td style="border: 1px solid;">'.$row["branchid"].'</td>
+      <td style="border: 1px solid;">'.$row["branchname"].'</td>
+      <td style="border: 1px solid;">'.$row["address"].'</td>
+      <td style="border: 1px solid;">'.$row["contact"].'</td>
+      
       <td class="text-center" style="border: 1px solid;"> 
-        <button class=" editusersbutton btn btn-info" id="edit" data-id="'.$row["productid"].'" ><i class="fa-solid fa-pen-to-square"></i></button> 
-        <button class="delete btn btn-danger" id="del_'.$row["productid"].'" data-id="'.$row["productid"].'"><i class="fa-solid
-        fa-circle-minus" ></i></button>
+        <button class=" editusersbutton btn btn-info" id="edit" data-id="'.$row["branchid"].'" ><i class="fa-solid fa-pen-to-square"></i></button> 
+        <button class="delete btn btn-danger" id="del_'.$row["branchid"].'" data-id="'.$row["branchid"].'"><i class="fa-solid fa-circle-minus" ></i></button>
       </td>
     </tr>
     ';

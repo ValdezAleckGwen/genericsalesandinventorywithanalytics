@@ -1,10 +1,10 @@
 <?php
 
-include '../actions/database_connection.php';
+include 'database_connection.php';
 
-
-
-    $id = 'B-0000001';
+if(isset($_GET['id']))
+{
+    $id = $_GET['id'];
     $query = "SELECT id, name, branchaddress, contactnumber
     FROM tblbranch 
     WHERE id = :id";
@@ -25,6 +25,8 @@ include '../actions/database_connection.php';
     }
 
     echo json_encode($data);
-var_dump($data);
 
+} else {
+    echo "no data found";
+}
 ?>
