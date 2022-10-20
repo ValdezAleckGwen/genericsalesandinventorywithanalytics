@@ -92,12 +92,14 @@ if($total_data > 0)
 
       <td class="text-center" style="border: 1px solid;">
       <button class=" editusersbutton btn btn-info" id="edit" data-id="'.$row["id"].'" ><i class="fa-solid fa-pen-to-square"></i></button> 
-      <button class="delete btn btn-danger" id="#" data-id="#"><i class="fa-solid fa-circle-minus">  </i></button>
+      <button class="delete btn btn-danger" id="del_'.$row["id"].'" data-id="'.$row["id"].'"><i class="fa-solid
+        fa-circle-minus" ></i></button>
       </td>
     </tr>
     ';
   }
 }
+
 else
 {
   $output .= '
@@ -118,14 +120,15 @@ $total_links = ceil($total_data/$limit);
 $previous_link = '';
 $next_link = '';
 $page_link = '';
+$pagination_limit = 4;
 
 //echo $total_links;
 $page_array[] = null; //this is it pancit
 if($total_links > 4)
 {
-  if($page < 10)
+  if($page < $pagination_limit)
   {
-    for($count = 1; $count <= 10; $count++)
+    for($count = 1; $count <= $pagination_limit; $count++)
     {
       $page_array[] = $count;
     }
@@ -134,7 +137,7 @@ if($total_links > 4)
   }
   else
   {
-    $end_limit = $total_links - 10;
+    $end_limit = $total_links - $pagination_limit;
     if($page > $end_limit)
     {
       $page_array[] = 1;
@@ -178,7 +181,8 @@ for($count = 0; $count < count($page_array); $count++)
     $previous_id = $page_array[$count] - 1;
     if($previous_id > 0)
     {
-      $previous_link = '<li class="page-item"><a class="page-link"  href="javascript:void(0)" data-page_number="'.$previous_id.'">Previous</a></li>';
+      $previous_link = '<li class="page-item"><a class="page-link"   href="javascript:void(0)" data-page_number="'.$previous_id.'">Previous</a></li>';
+
     }
     else
     {
@@ -199,24 +203,28 @@ for($count = 0; $count < count($page_array); $count++)
     }
     else
     {
-      $next_link = '<li class="page-item"><a class="page-link" id="itlog" href="javascript:void(0)" data-page_number="'.$next_id.'">Next</a></li>';
+      $next_link = '<li class="page-item"><a class="page-link" href="javascript:void(0)" data-page_number="'.$next_id.'">Next</a></li>';
     }
   }
   else
   {
     if($page_array[$count] == '...')
     {
-      $page_link .= '
-      <li class="page-item disabled">
-          <a class="page-link" href="#">...</a>
-      </li>
-      ';
+     $page_link .= '
+        <li class="page-item disabled">
+                <a class="page-link" href="#">...</a>
+            </li>
+        ';
     }
     else
     {
-      // $page_link .= '
-      // <li class="page-item"><a class="page-link" id="itlog" href="javascript:void(0)" data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>
-      // ';
+      if($page_array[$count] != ''){
+        $page_link .= '
+        <li class="page-item">
+          <a class="page-link" href="javascript:void(0)" data-page_number="'.$page_array[$count].'">'.$page_array[$count].'</a></li>
+        ';
+        
+      }
     }
   }
 }

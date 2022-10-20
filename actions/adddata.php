@@ -23,6 +23,9 @@
 	function createId(string $tblName) {
 
 		switch ($tblName) {
+			case 'tblbranch':
+				$index = "B-";
+				break;
 			case 'tblcategory':
 				$index = "C-";
 				break;
@@ -73,12 +76,6 @@
 				break;
 			case 'tblstocktransfer':
 				$index = "STI-";
-				break;
-			case 'tblsalesreturn':
-				$index = "SR-";
-				break;
-			case 'tblsalesreturnitem':
-				$index = "SRI-";
 				break;
 			default:
 				$index = "";

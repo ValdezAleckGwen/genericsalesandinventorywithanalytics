@@ -1,17 +1,31 @@
+<?php
+    
+//index.php 
+include '../actions/adddata.php';
+include '../actions/database_connection.php';
+
+?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Branch Dashboard</title>
-    <link rel="stylesheet" href="assets/style.css">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
-        <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script> 
+    <title>Branch</title>
+
+        <link rel="stylesheet" href="assets/style.css">
+
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta3/css/all.css" type="text/css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <script src='https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js'></script>
+        <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
         <script>
+
+    // Delete Function Jquery //
             $(document).ready(function () {
 
                 // Delete 
@@ -34,7 +48,7 @@
 
                                     // Removing row from HTML Table
                                     if (response == ' ok') {
-                                        bootbox.alert('Branch deleted.');
+                                        bootbox.alert('Record deleted.');
                                         $(el).closest('tr').css('background', 'tomato');
                                         $(el).closest('tr').fadeOut(800, function () {
                                             $(this).remove();
@@ -53,11 +67,14 @@
                 });
             });
         </script>
+
+    
   </head>
   <body>
 
 <!-- Start of sidebar -->
     <div class="side-bar">
+
 <!-- Start of Menu Proper -->
       <div class="menu">
         <!-- Dashboard -->
@@ -90,9 +107,9 @@
         <div class="item">
           <a class="sub-btn"><i class="fa-regular fa-table-cells-large"></i>Category<i class="fas fa-angle-right dropdown"></i></a>
           <div class="sub-menu">
-            <a href="../category/index.php" class="sub-item"><i class="fa-regular fa-house-blank"></i>Dashboard</a>
-            <a href="../category/addcategory/index.php" class="sub-item"><i class="fa-regular fa-circle-plus"></i>Add Category</a>
-            <a href="../category/editcategory/index.php" class="sub-item"><i class="fa-regular fa-pen-to-square"></i>Edit Category</a>
+            <a href="category_index.php" class="sub-item"><i class="fa-regular fa-house-blank"></i>Dashboard</a>
+            <a href="addcategory_index.php" class="sub-item"><i class="fa-regular fa-circle-plus"></i>Add Category</a>
+            <a href="editcategory_index.php" class="sub-item"><i class="fa-regular fa-pen-to-square"></i>Edit Category</a>
           </div>
         </div>
 
@@ -105,8 +122,7 @@
           </div>
         </div>
 
-
-         <!-- Purchase Order -->
+        <!-- Purchase Order -->
         <div class="item"><a href="purchase_index.php"><i class="fa-regular fa-file-invoice"></i>Purchase Order</a></div>
 
         <!-- Delivery Order -->
@@ -147,8 +163,9 @@
           </div>
         </div>
 
+
         <!-- Audit Logs -->
-        <div class="item"><a href="audit_index.php"><i class="fa-regular fa-file-chart-pie"></i>Audit Logs</a></div>           
+        <div class="item"><a href="audit_index.php"><i class="fa-regular fa-file-chart-pie"></i>Audit Logs</a></div>         
 
         <!-- Settings -->
         <div class="item">
@@ -165,10 +182,9 @@
       </div>
     </div>
 
-
-<!-- <div class="usericon"><?php //echo displayUser(); ?> <i class="fa-regular fa-user"></i></div> --> 
-
-
+    
+    <div class="usericon">Admin <i class="fa-regular fa-user"></i></div>
+    
     <script type="text/javascript">
     $(document).ready(function(){
       //jquery for toggle sub menus
@@ -179,34 +195,134 @@
     });
 
     </script>
+
+
 <div class="main">
   <div class="flex-container">
      <div class="flex-items">
        <div class="table-title">
-        <h3>PRODUCTS</h3>
-        <div style="display: inline">
-           <a href="addproduct_index.php">
-              <button type="button" class="btn btn-primary" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-circle-plus"></i> Add</button>
-            </a>
-            <button type="button" class="btn btn-dark" style="font-size: 16px; font-weight: 700;"><i class="fa-solid fa-print"></i> Print</button>
-        <div style="float: right;">
-            <label><span>Search: </span><input type="text" name="search_box" id="search_box" value=""/></label>       
-        </div>
+        
+        <h3>BRANCH</h3>
+
+          <div style="display: inline;">
+                        <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#userAddModal">
+                            Add Branch
+                        </button>
+            <button type="button" class="btn btn-success" style="font-size: 16px; font-weight: 700;"><i class="fa-regular fa-circle-check"></i> Save</button>
+          </div>
+
+          <div style="float: right;">
+            <label><span>Search: </span><input type="text" name="search_box" id="search_box" value=""/></label>
           </div>
         </div>
-       
-        <div border='1' class='table-responsive' id="dynamic_content">
-        <!--product content-->
-        </div>
         
-    </body>
+
+        <div class="table-responsive" id="dynamic_content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Add branch modal -->
+<div class="modal fade" id="userAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Branch</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form id="savebranch">
+                <div class="modal-body">
+
+                    <div id="errorMessage" class="alert alert-warning d-none"></div>
+
+                    <div class="mb-3">
+                        <label for="">ID</label>
+                        <input type="text" name="id" class="form-control" value="<?php echo createId('tblbranch');?>" readonly/>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="">NAME</label>
+                        <input type="text" name="name" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="">BRANCH ADDRESS</label>
+                        <input type="text" name="address" class="form-control" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="">CONTACT NUMBER</label>
+                        <input type="text" name="contact" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Branch</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit branch Modal -->
+<div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Edit Branch</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <form id="editbranch">
+            <div class="modal-body">
+
+                <div id="errorMessageUpdate" class="alert alert-warning d-none"></div>
+
+                <div class="mb-3">
+                    <label for="">ID</label>
+                    <input type="text" name="id" class="form-control id"   id="eid" value="" readonly/>
+                </div>
+
+                <div class="mb-3">
+                    <label for="">NAME</label>
+                    <input type="text" name="name" class="form-control name" id="ename" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="">ADDRESS</label>
+                    <input type="text" name="address" class="form-control name" id="eaddress" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="">CONTACT</label>
+                    <input type="text" name="contact" class="form-control name" id="econtact" />
+                </div>
+
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Update Branch</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+</body>
 </html>
-</html>
+
 <script>
+
+  // Pagination//
   $(document).ready(function(){
     load_data(1);
 
-    function load_data(page, query = '')
+    function load_data(page = 1, query = '')
     {
       $.ajax({
         url:"../actions/fetchbranch.php",
@@ -227,8 +343,125 @@
 
     $('#search_box').keyup(function(){
       var query = $('#search_box').val();
-      load_data(1, query);
+      load_data(2, query);
     });
 
   });
+
+    // Add Function//
+    $(document).on('submit', '#savebranch', function (e) {
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    formData.append("save_branch", true);
+
+
+    $.ajax({
+        type: "POST",
+        url: "../actions/insertbranch.php",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+                  
+            var res = jQuery.parseJSON(response);
+                    
+            if(res.status == 422) {
+                $('#errorMessage').removeClass('d-none');
+                $('#errorMessage').text(res.message);
+
+            }else if(res.status == 200){
+                $('#errorMessage').addClass('d-none');
+                $('#userAddModal').modal('hide');
+                $('#savebranch')[0].reset();
+
+                alertify.set('notifier','position', 'top-right');
+                alertify.success(res.message);
+
+                $('#myTable').load(location.href + " #myTable");
+
+            }else if(res.status == 500) {
+                $('#errorMessage').removeClass('d-none');
+                $('#errorMessage').text(res.message);
+
+            } else if (res.status == 69) {
+                $('#errorMessage').removeClass('d-none');
+                $('#errorMessage').text(res.message);
+            }
+        }
+    });
+    });
+
+ // Edit User Get Data //
+        $(document).on('click', '#edit', function () {
+
+           var id = $(this).data('id');
+           alert(id);
+           
+            
+            $.ajax({
+                type: "GET",
+                url: "../actions/editbranch.php",
+                data: {id: id},
+                dataType: "JSON",
+                success: function (data) {
+                
+                // var res = jQuery.parseJSON(response)
+                $('#eid').val(data.id);
+                $('#ename').val(data.name);
+                $('#eaddress').val(data.branchaddress);
+                $('#econtact').val(data.contactnumber);
+                $('#userEditModal').modal('show');
+                        
+                        
+                   
+
+                }
+            });
+
+        });
+
+        // Update User Jquery //
+        $(document).on('submit', '#editbranch', function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+            formData.append("edit_branch", true);
+
+            $.ajax({
+                type: "POST",
+                url: "../actions/insertbranch.php",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    alert(response);
+                    var res = jQuery.parseJSON(response);
+                    
+                    if(res.status == 422) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+
+                    }else if(res.status == 200){
+
+                        $('#errorMessage').addClass('d-none');
+                        $('#userAddModal').modal('hide');
+                        $('#editbranch')[0].reset();
+
+                        alertify.set('notifier','position', 'top-right');
+                        alertify.success(res.message);
+
+                        $('#myTable').load(location.href + " #myTable");
+
+                    }else if(res.status == 500) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    } else if (res.status == 69) {
+                        $('#errorMessage').removeClass('d-none');
+                        $('#errorMessage').text(res.message);
+                    }
+                }
+            });
+
+        });
 </script>
